@@ -30,7 +30,7 @@ Open http://127.0.0.1:8000 — search for **demo**, browse **`/search`** with an
 
 ## Project plans
 
-Implementation plan snapshots (numbered evolution): **[plans/README.md](plans/README.md)** — includes [`01-game-price-finder-python-uv.plan.md`](plans/01-game-price-finder-python-uv.plan.md) through [`10-price-history-charts.plan.md`](plans/10-price-history-charts.plan.md).
+Implementation plan snapshots (numbered evolution): **[plans/README.md](plans/README.md)** — includes [`01-game-price-finder-python-uv.plan.md`](plans/01-game-price-finder-python-uv.plan.md) through [`11-history-explorer-ui-and-catalog-covers.plan.md`](plans/11-history-explorer-ui-and-catalog-covers.plan.md).
 
 ## Live integrations
 
