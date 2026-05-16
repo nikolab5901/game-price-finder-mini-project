@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback admin · Game Price Finder{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Recent feedback</h1>
+<p class="muted tiny">Showing up to {{ rows | length }} newest rows.</p>
+{% if not rows %}
+<p class="muted">No submissions yet.</p>
+{% else %}
+<div class="table-scroll">
+<table class="sources feedback-admin-table">
+  <thead>
+    <tr>
+      <th>When</th>
+      <th>Category</th>
+      <th>Game</th>
+      <th>Reference</th>
+      <th>Suggested USD</th>
+      <th>Body</th>
+      <th>Email</th>
+      <th>HP</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in rows %}
+    <tr>
+      <td>{{ r.created_at }}</td>
+      <td>{{ r.category }}</td>
+      <td>{{ r.game_title or "—" }}</td>
+      <td>{{ r.reference_note or "—" }}</td>
+      <td class="right">{% if r.suggested_price_usd is not none %}${{ "%.2f"|format(r.suggested_price_usd) }}{% else %}—{% endif %}</td>
+      <td>{{ r.body }}</td>
+      <td>{{ r.contact_email or "—" }}</td>
+      <td>{{ r.honeypot }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+{% endblock %}

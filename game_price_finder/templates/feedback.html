@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Suggest a correction · Game Price Finder{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Suggest a correction</h1>
+<p class="muted">
+  Spot an inaccurate price signal, wrong catalog match, or confusing label? Leave a note for the site operator.
+  Nothing here updates listings automatically — this is feedback only.
+</p>
+
+<form class="feedback-form panel" action="{{ url_for('feedback_submit') }}" method="post">
+  <!-- Honeypot — leave empty -->
+  <div class="hp" aria-hidden="true">
+    <label for="website">Website</label>
+    <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+  </div>
+
+  <p>
+    <label for="category">Category</label><br>
+    <select id="category" name="category" required>
+      <option value="price_correction">Price correction</option>
+      <option value="wrong_game">Wrong game / catalog link</option>
+      <option value="feature">Feature idea</option>
+      <option value="other">Other</option>
+    </select>
+  </p>
+  <p>
+    <label for="game_title">Game title (optional)</label><br>
+    <input id="game_title" name="game_title" type="text" maxlength="300" value="{{ pref_title or '' }}" placeholder="As shown on the site">
+  </p>
+  <p>
+    <label for="reference_note">Reference URL or IDs (optional)</label><br>
+    <input id="reference_note" name="reference_note" type="text" maxlength="800" value="{{ pref_reference or '' }}" placeholder="Steam page, IGDB ID, etc.">
+  </p>
+  <p>
+    <label for="suggested_price_usd">Suggested fair price USD (optional)</label><br>
+    <input id="suggested_price_usd" name="suggested_price_usd" type="text" inputmode="decimal" maxlength="12" placeholder="e.g. 29.99">
+  </p>
+  <p>
+    <label for="body">Details</label><br>
+    <textarea id="body" name="body" rows="6" maxlength="8000" required placeholder="What should change and why?"></textarea>
+  </p>
+  <p>
+    <label for="contact_email">Contact email (optional)</label><br>
+    <input id="contact_email" name="contact_email" type="email" maxlength="200" placeholder="Only if you want a reply">
+  </p>
+  <p><button type="submit">Send feedback</button></p>
+</form>
+{% endblock %}

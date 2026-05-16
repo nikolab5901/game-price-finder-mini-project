@@ -14,6 +14,8 @@
       <nav class="nav">
         <a href="{{ url_for('index') }}">Home</a>
         <a href="{{ url_for('search_page') }}">Search</a>
+        <a href="{{ url_for('guides_page') }}">Guides</a>
+        <a href="{{ url_for('feedback_page') }}">Feedback</a>
       </nav>
     </div>
   </header>
@@ -34,6 +36,7 @@
   <footer class="site-footer wrap">
     <p class="muted">
       Estimates depend on marketplace coverage and listing mix. Ask prices differ from realized sale prices — treat outputs as orientation, not appraisals.
+      <a href="{{ url_for('feedback_page') }}">Suggest a correction</a>
     </p>
   </footer>
 </body>

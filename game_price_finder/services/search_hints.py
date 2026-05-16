@@ -67,32 +67,42 @@ async def batch_price_hints_for_games(
     concurrency: int = 8,
     overall_timeout: float = 12.0,
     per_game_timeout: float = 14.0,
-) -> dict[int, float]:
-    """Best-effort CheapShark cheapest prices keyed by IGDB id (Steam-linked rows only)."""
-    targets = [g for g in games if g.steam_app_id is not None]
-    if not targets:
+) -> dict[str, float]:
+    """CheapShark cheapest USD hints keyed by ``price_hint_key`` (``igdb:*`` / ``steam:*``)."""
+    steam_to_keys: dict[int, list[str]] = {}
+    for g in games:
+        if g.steam_app_id is None:
+            continue
+        sid = int(g.steam_app_id)
+        key = g.price_hint_key
+        if not key:
+            key = f"steam:{sid}"
+        steam_to_keys.setdefault(sid, []).append(key)
+
+    if not steam_to_keys:
         return {}
 
     sem = asyncio.Semaphore(concurrency)
 
-    async def fetch_price(game: GameSummary) -> tuple[int, float | None]:
-        assert game.steam_app_id is not None
+    async def fetch_one(steam_app_id: int) -> tuple[int, float | None]:
         async with sem:
             try:
                 price = await cheapshark_cheapest_for_steam_app_id(
-                    steam_app_id=int(game.steam_app_id),
+                    steam_app_id=steam_app_id,
                     timeout=per_game_timeout,
                 )
             except Exception:
-                return game.igdb_id, None
-            return game.igdb_id, price
+                return steam_app_id, None
+            return steam_app_id, price
 
-    async def run_all() -> dict[int, float]:
-        pairs = await asyncio.gather(*(fetch_price(g) for g in targets))
-        hints: dict[int, float] = {}
-        for igdb_id, price in pairs:
-            if price is not None:
-                hints[igdb_id] = price
+    async def run_all() -> dict[str, float]:
+        pairs = await asyncio.gather(*(fetch_one(sid) for sid in steam_to_keys))
+        hints: dict[str, float] = {}
+        for steam_app_id, price in pairs:
+            if price is None:
+                continue
+            for hint_key in steam_to_keys.get(steam_app_id, []):
+                hints[hint_key] = price
         return hints
 
     try:

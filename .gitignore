@@ -11,3 +11,6 @@ wheels/
 
 # Local secrets
 .env
+
+# SQLite feedback DB (operator-specific)
+data/

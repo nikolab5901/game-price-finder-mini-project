@@ -14,13 +14,26 @@ class SearchSuggestion(BaseModel):
 
 
 class GameSummary(BaseModel):
-    igdb_id: int
+    """Catalog row — IGDB-native and/or supplemental RAWG / Giant Bomb."""
+
+    igdb_id: int | None = None
+    rawg_id: int | None = None
+    giant_bomb_guid: str | None = None
+
     title: str
     platform_summary: str | None = None
     cover_image_url: str | None = None
     release_year: int | None = None
     steam_app_id: int | None = None
     cover_sources: list[str] = Field(default_factory=list)
+
+    genres: list[str] = Field(default_factory=list)
+    game_modes: list[str] = Field(default_factory=list)
+    short_description: str | None = None
+    igdb_slug: str | None = None
+
+    detail_path: str | None = None
+    price_hint_key: str | None = None
 
 
 Channel = Literal["new", "used", "unknown"]

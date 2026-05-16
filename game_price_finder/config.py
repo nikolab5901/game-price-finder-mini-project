@@ -16,6 +16,22 @@ class Settings(BaseSettings):
     ebay_environment: str = "production"
     ebay_marketplace_id: str = "EBAY_US"
 
+    rawg_api_key: str | None = None
+    giant_bomb_api_key: str | None = None
+
+    catalog_merge_max_results: int = 40
+    igdb_search_limit: int = 30
+    catalog_rawg_limit: int = 15
+    catalog_gb_limit: int = 8
+
+    catalog_suggestions_merge_max: int = 24
+    catalog_suggestions_igdb_limit: int = 8
+    catalog_suggestions_rawg_limit: int = 6
+    catalog_suggestions_gb_limit: int = 4
+
+    feedback_db_path: str = "data/feedback.db"
+    feedback_admin_token: str | None = None
+
     default_currency: str = "USD"
 
 

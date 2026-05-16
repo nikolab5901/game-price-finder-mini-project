@@ -6,17 +6,25 @@ from pathlib import Path
 
 from game_price_finder.models import GamePricingPage, GameSummary
 
-_FIXTURE_PATH = Path(__file__).with_name("demo_fixtures.json")
+_PACKAGE_DIR = Path(__file__).resolve().parent
+# demo_fixtures.json first so synthetic demos appear before curated titles on empty browse.
+_FIXTURE_JSON_PATHS = (
+    _PACKAGE_DIR / "demo_fixtures.json",
+    _PACKAGE_DIR / "popular_catalog.json",
+)
 
 
 @lru_cache
 def _catalog_pages() -> tuple[GamePricingPage, ...]:
-    raw = json.loads(_FIXTURE_PATH.read_text(encoding="utf-8"))
-    entries = raw.get("entries", [])
     pages: list[GamePricingPage] = []
-    for row in entries:
-        if isinstance(row, dict):
-            pages.append(GamePricingPage.model_validate(row))
+    for path in _FIXTURE_JSON_PATHS:
+        if not path.is_file():
+            continue
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        entries = raw.get("entries", [])
+        for row in entries:
+            if isinstance(row, dict):
+                pages.append(GamePricingPage.model_validate(row))
     return tuple(pages)
 
 

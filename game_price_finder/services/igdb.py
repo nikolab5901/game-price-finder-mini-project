@@ -134,6 +134,30 @@ def _platform_summary(platforms: Any) -> str | None:
     return ", ".join(names) if names else None
 
 
+def _named_refs(items: Any, *, limit: int = 12) -> list[str]:
+    if not isinstance(items, list) or not items:
+        return []
+    names: list[str] = []
+    for item in items[:limit]:
+        if isinstance(item, dict) and item.get("name"):
+            names.append(str(item["name"]))
+    return names
+
+
+def _truncate_blurb(text: Any, max_len: int = 400) -> str | None:
+    if not isinstance(text, str):
+        return None
+    s = " ".join(text.strip().split())
+    if not s:
+        return None
+    if len(s) <= max_len:
+        return s
+    cut = s[: max_len - 1]
+    if " " in cut:
+        cut = cut.rsplit(" ", 1)[0]
+    return cut + "…"
+
+
 def _game_summary_from_payload(row: dict[str, Any]) -> GameSummary | None:
     gid = row.get("id")
     name = row.get("name")
@@ -154,6 +178,11 @@ def _game_summary_from_payload(row: dict[str, Any]) -> GameSummary | None:
 
     steam_app_id = extract_steam_app_id(row.get("external_games"))
 
+    slug_raw = row.get("slug")
+    igdb_slug = str(slug_raw).strip() if slug_raw else None
+    if igdb_slug == "":
+        igdb_slug = None
+
     return GameSummary(
         igdb_id=int(gid),
         title=str(name),
@@ -161,13 +190,18 @@ def _game_summary_from_payload(row: dict[str, Any]) -> GameSummary | None:
         cover_image_url=cover_image_url,
         release_year=release_year,
         steam_app_id=steam_app_id,
-        cover_sources=cover_sources or None,
+        cover_sources=cover_sources if cover_sources else [],
+        genres=_named_refs(row.get("genres")),
+        game_modes=_named_refs(row.get("game_modes")),
+        short_description=_truncate_blurb(row.get("summary")),
+        igdb_slug=igdb_slug,
     )
 
 
 def _game_fields_line() -> str:
     return (
-        "fields id,name,cover.url,cover.image_id,first_release_date,platforms.name,"
+        "fields id,name,slug,cover.url,cover.image_id,first_release_date,platforms.name,"
+        "genres.name,game_modes.name,summary,"
         "external_games.uid,external_games.category,rating_count;\n"
     )
 

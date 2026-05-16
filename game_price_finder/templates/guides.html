@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Guides for buyers & sellers · Game Price Finder{% endblock %}
+
+{% block content %}
+<div class="guides-page">
+  <h1 class="page-title">Guides for buyers & sellers</h1>
+  <p class="muted guides-lede">
+    Game Price Finder does not process purchases or listings. Use these notes to interpret what you see here and what to verify on marketplaces yourself.
+  </p>
+
+  <section class="guides-grid">
+    <article class="guides-card panel">
+      <h2 class="guides-card-title">For buyers</h2>
+      <ul class="guides-list">
+        <li><strong>Asks ≠ deals.</strong> Many figures reflect current listing prices or storefront tags—not guaranteed resale outcomes after fees, tax, or shipping.</li>
+        <li><strong>Always check edition.</strong> Base game, GOTY, deluxe, remaster, or bundle SKUs trade at different prices; match the exact product code when possible.</li>
+        <li><strong>Physical vs digital vs keys.</strong> Cartridges/discs, Steam licenses, and third-party keys carry different risks (region locks, revocation, account-bound).</li>
+        <li><strong>Use sold comps.</strong> On eBay and similar sites, filter to <strong>completed / sold</strong> listings with the same condition and region before trusting a single ask.</li>
+        <li><strong>PC promos.</strong> CheapShark-style data tracks time-limited storefront sales; a low number may expire quickly or exclude your region.</li>
+        <li><strong>Cross-check condition.</strong> “Like new,” “CIB,” “loose,” and refurbished mean different things—read the seller’s description and photos.</li>
+      </ul>
+      <p class="muted small">
+        Detail pages link to external search hubs (eBay, retailers, SteamDB where applicable)—open them to dig deeper.
+      </p>
+    </article>
+
+    <article class="guides-card panel">
+      <h2 class="guides-card-title">For sellers</h2>
+      <ul class="guides-list">
+        <li><strong>Price to sold comps.</strong> Anchor your ask to recent <strong>sold</strong> listings with the same edition, region, and condition—not only the lowest active listing.</li>
+        <li><strong>Disclose clearly.</strong> Platform, completeness (box/manual), scratches, DLC redemptions, and whether codes are unused should be explicit to avoid disputes.</li>
+        <li><strong>Photos matter.</strong> Clear shots of labels, discs/carts, and any damage build trust and reduce returns.</li>
+        <li><strong>Fees &amp; shipping.</strong> Marketplace fees, labels, insurance, and taxes change your net—estimate them before you compare to comps.</li>
+        <li><strong>Authenticity.</strong> High-value collectibles attract repros; cite provenance where you can and match known good label/print patterns (verify with specialist guides).</li>
+        <li><strong>Digital keys.</strong> Resale policies vary by platform and store; confirm you’re allowed to transfer and that keys are unused.</li>
+      </ul>
+      <p class="muted small">
+        Numbers on this site are orientation only—not appraisals or listing advice. When in doubt, consult a professional for high-value items.
+      </p>
+    </article>
+  </section>
+
+  <p class="muted tiny">
+    <a href="{{ url_for('search_page') }}">Back to search</a>
+    ·
+    <a href="{{ url_for('feedback_page') }}">Suggest an improvement</a>
+  </p>
+</div>
+{% endblock %}

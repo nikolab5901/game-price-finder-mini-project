@@ -6,6 +6,7 @@ from urllib.parse import quote_plus
 
 from game_price_finder.models import GamePricingPage, GameSummary, PriceEstimate, SoldBand, SourceOffer, utcnow
 from game_price_finder.services.cheapshark import deal_price_usd, fetch_cheapshark_snapshot, store_id_to_name
+from game_price_finder.services.research_links import marketplace_query_for_game, research_listing_offers
 from game_price_finder.services.steam import SteamLookupResult, steam_storefront_url
 
 
@@ -45,13 +46,6 @@ def _parse_item_price_usd(row: dict[str, Any]) -> float | None:
         return None
 
 
-def marketplace_query_for_game(game: GameSummary) -> str:
-    parts = [game.title]
-    if game.platform_summary:
-        parts.append(game.platform_summary.split(",")[0].strip())
-    return " ".join(p for p in parts if p).strip()
-
-
 def _bucket_for_condition(condition_id: Any) -> str | None:
     if not condition_id:
         return None
@@ -73,22 +67,15 @@ def ebay_market_section(
     now = utcnow()
     notes: list[str] = []
 
-    manual_offer = SourceOffer(
-        source="eBay",
-        label="Search completed listings manually",
-        url=f"https://www.ebay.com/sch/i.html?_nkw={quote_plus(marketplace_query_for_game(game))}",
-        fetched_at=now,
-    )
-
     if ebay_skip_reason:
         notes.append(ebay_skip_reason)
-        return [], None, manual_offer, notes
+        return [], None, None, notes
 
     if not summaries:
         notes.append(
-            "No active eBay listings matched this IGDB-derived query — widen keywords or retry later.",
+            "No active eBay listings matched this catalog-derived query — widen keywords or retry later.",
         )
-        return [], None, manual_offer, notes
+        return [], None, None, notes
 
     new_prices: list[float] = []
     used_prices: list[float] = []
@@ -170,6 +157,56 @@ def ebay_market_section(
     return estimates, sold_band, row, notes
 
 
+def _cheapshark_buyer_signal_notes(deals: list[dict[str, Any]]) -> list[str]:
+    notes: list[str] = []
+    meta_vals: list[int] = []
+    steam_snippets: list[str] = []
+    savings_vals: list[float] = []
+
+    for deal in deals[:12]:
+        ms = deal.get("metacriticScore")
+        if ms not in (None, "", "0", 0):
+            try:
+                v = int(float(str(ms).strip()))
+                if v > 0:
+                    meta_vals.append(v)
+            except (TypeError, ValueError):
+                pass
+
+        st = deal.get("steamRatingText")
+        pct = deal.get("steamRatingPercent")
+        if isinstance(st, str) and st.strip():
+            label = st.strip()
+            if isinstance(pct, str) and pct.strip():
+                snippet = f"{label} ({pct.strip()}% positive on sampled Steam-facing rows)"
+            elif pct not in (None, ""):
+                snippet = f"{label} ({pct}% positive on sampled Steam-facing rows)"
+            else:
+                snippet = label
+            if snippet not in steam_snippets:
+                steam_snippets.append(snippet)
+
+        sv = deal.get("savings")
+        if sv not in (None, "", "0", 0):
+            try:
+                savings_vals.append(float(str(sv).strip()))
+            except (TypeError, ValueError):
+                pass
+
+    if meta_vals:
+        notes.append(
+            f"CheapShark rows include publisher Metacritic hints up to {max(meta_vals)}/100 — scores attach to specific storefront SKUs, not every resale scenario.",
+        )
+    if steam_snippets:
+        notes.append(f"Steam review summaries echoed on sampled deals: {steam_snippets[0]} — sentiment only, not resale guidance.")
+    if savings_vals:
+        med_sv = sorted(savings_vals)[len(savings_vals) // 2]
+        notes.append(
+            f"Median advertised discount depth on sampled deals ≈ {med_sv:.0f}% off list — promotions expire quickly; verify current carts.",
+        )
+    return notes
+
+
 def steam_market_section(steam: SteamLookupResult | None) -> tuple[list[SourceOffer], list[PriceEstimate], list[str]]:
     now = utcnow()
     if steam is None:
@@ -226,6 +263,8 @@ async def cheapshark_market_section(game: GameSummary) -> tuple[list[SourceOffer
         notes.append("CheapShark found no catalog row close to this IGDB title.")
         return [], [], notes
 
+    notes.extend(_cheapshark_buyer_signal_notes(deals))
+
     stores = await store_id_to_name()
     sources: list[SourceOffer] = []
     prices: list[float] = []
@@ -243,12 +282,31 @@ async def cheapshark_market_section(game: GameSummary) -> tuple[list[SourceOffer
         store_name = stores.get(sid, f"Store {sid}")
         title = deal.get("title")
         label = str(title) if title else "Digital deal"
+        extras: list[str] = []
+        np = deal.get("normalPrice")
+        if np not in (None, "", "0"):
+            try:
+                npf = float(str(np).strip())
+                extras.append(f"MSRP ${npf:.2f}")
+            except (TypeError, ValueError):
+                pass
+        ms = deal.get("metacriticScore")
+        if ms not in (None, "", "0", 0):
+            try:
+                mv = int(float(str(ms).strip()))
+                if mv > 0:
+                    extras.append(f"Metacritic {mv}")
+            except (TypeError, ValueError):
+                pass
+        if extras:
+            label = f"{label[:110]} ({' · '.join(extras)})"
+
         url = deal.get("dealURL")
         url_str = str(url) if isinstance(url, str) else None
         sources.append(
             SourceOffer(
                 source=f"CheapShark · {store_name}",
-                label=label[:140],
+                label=label[:160],
                 url=url_str,
                 price_usd=price,
                 fetched_at=now,
@@ -292,7 +350,7 @@ def assemble_game_page(
         "Treat each column as its own signal — mixing them without context will distort buy/sell decisions.",
     ]
 
-    ebay_estimates, sold_band, ebay_row, ebay_notes = ebay_market_section(
+    ebay_estimates, sold_band, ebay_snapshot_row, ebay_notes = ebay_market_section(
         game,
         ebay_summaries,
         ebay_skip_reason=ebay_skip_reason,
@@ -306,8 +364,9 @@ def assemble_game_page(
     estimates = [*ebay_estimates, *steam_estimates, *cheapshark_estimates]
 
     sources: list[SourceOffer] = []
-    if ebay_row:
-        sources.append(ebay_row)
+    if ebay_snapshot_row:
+        sources.append(ebay_snapshot_row)
+    sources.extend(research_listing_offers(game, include_active_hub=ebay_snapshot_row is None))
     sources.extend(steam_sources)
     sources.extend(cheapshark_sources)
     sources.extend(_placeholder_retail_searches(game))

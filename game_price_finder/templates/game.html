@@ -29,6 +29,27 @@
     </div>
   </header>
 
+  {% if page.game.short_description or page.game.genres or page.game.game_modes or page.game.igdb_slug %}
+  <section class="panel about-panel">
+    <h2 class="panel-title">About this title</h2>
+    {% if page.game.genres %}
+    <p class="about-meta muted small"><strong>Genres:</strong> {{ page.game.genres | join(', ') }}</p>
+    {% endif %}
+    {% if page.game.game_modes %}
+    <p class="about-meta muted small"><strong>Modes:</strong> {{ page.game.game_modes | join(', ') }}</p>
+    {% endif %}
+    {% if page.game.short_description %}
+    <p class="about-summary">{{ page.game.short_description }}</p>
+    {% endif %}
+    {% if page.game.igdb_slug %}
+    <p class="muted tiny">
+      <a href="https://www.igdb.com/games/{{ page.game.igdb_slug }}" rel="noopener noreferrer" target="_blank">Open IGDB profile</a>
+      <span class="muted"> — factual catalog entry; resale listings may differ by edition or region.</span>
+    </p>
+    {% endif %}
+  </section>
+  {% endif %}
+
   <section class="panel panel-intro">
     <h2 class="panel-title">Average estimates</h2>
     <p class="muted small panel-lede">
@@ -119,6 +140,31 @@
     </div>
   </section>
 
+  <section class="panel checklist-stack">
+    <details class="checklist-details">
+      <summary class="checklist-summary">Buyer checklist</summary>
+      <ul class="checklist-list">
+        <li>Match the exact <strong>edition</strong> (base, GOTY, deluxe, remaster) before comparing prices.</li>
+        <li>Separate <strong>physical</strong>, <strong>digital license</strong>, and <strong>reseller keys</strong> — protections and restrictions differ.</li>
+        <li>Use <strong>sold / completed</strong> listings (not only the cheapest active ask) when benchmarking.</li>
+        <li>Confirm <strong>region</strong>, platform family, and whether DLC or codes were already redeemed.</li>
+      </ul>
+    </details>
+    <details class="checklist-details">
+      <summary class="checklist-summary">Seller checklist</summary>
+      <ul class="checklist-list">
+        <li>Anchor your ask to recent <strong>sold comps</strong> with the same condition and completeness (CIB, loose, digital).</li>
+        <li>Disclose scratches, repro boxes, missing manuals, or redeemed DLC plainly to reduce disputes.</li>
+        <li>Remember <strong>fees, shipping, and taxes</strong> change net proceeds versus headline comps.</li>
+        <li>Use clear photos of labels and media — buyers often verify authenticity against reference shots.</li>
+      </ul>
+    </details>
+    <p class="muted tiny checklist-more">
+      More orientation:
+      <a href="{{ url_for('guides_page') }}">Guides for buyers &amp; sellers</a>.
+    </p>
+  </section>
+
   {% if page.methodology_notes %}
   <section class="panel prose-block">
     <h3 class="prose-heading">How to read this page</h3>
@@ -129,5 +175,11 @@
     </ul>
   </section>
   {% endif %}
+
+  <p class="muted tiny">
+    See something wrong?
+    <a href="{{ url_for('feedback_page') }}?game_title={{ page.game.title | urlquote }}">Suggest a correction</a>
+    for this title.
+  </p>
 </article>
 {% endblock %}
