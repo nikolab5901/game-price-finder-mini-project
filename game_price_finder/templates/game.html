@@ -82,6 +82,119 @@
     {% endif %}
   </section>
 
+  {% if page.price_history_chart %}
+  <section class="panel price-history-panel" aria-labelledby="price-history-heading">
+    <h2 id="price-history-heading" class="panel-title">Price history</h2>
+    <p class="muted small panel-lede">{{ page.price_history_chart.title }}</p>
+    <div class="price-history-chart-wrap">
+      <canvas
+        id="price-history-canvas"
+        height="260"
+        width="720"
+        role="img"
+        aria-labelledby="price-history-heading"
+        aria-describedby="price-history-datatable"></canvas>
+    </div>
+    <noscript>
+      <div class="table-scroll">
+        <table class="price-history-fallback">
+          <thead>
+            <tr>
+              <th>When (UTC)</th>
+              <th>Series</th>
+              <th>Price</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ds in page.price_history_chart.datasets %}
+            {% for p in ds.points %}
+            <tr>
+              <td>{{ p.at.strftime('%Y-%m-%d %H:%M') }}</td>
+              <td>{{ ds.display_name }}</td>
+              <td>{{ '%.2f' % p.price }} {{ p.currency }}</td>
+              <td class="muted">{{ p.caption }}</td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </noscript>
+    <table id="price-history-datatable" class="price-history-fallback sr-only">
+      <caption>Price history data (screen-reader summary)</caption>
+      <thead>
+        <tr>
+          <th>When (UTC)</th>
+          <th>Series</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ds in page.price_history_chart.datasets %}
+        {% for p in ds.points %}
+        <tr>
+          <td>{{ p.at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td>{{ ds.display_name }}</td>
+          <td>{{ '%.2f' % p.price }} {{ p.currency }}</td>
+        </tr>
+        {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if page.price_history_chart.footnotes %}
+    <ul class="muted small price-history-footnotes">
+      {% for note in page.price_history_chart.footnotes %}
+      <li>{{ note }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <script type="application/json" id="price-history-json">{{ page.price_history_chart | chartjs_json | safe }}</script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof Chart === 'undefined') { return; }
+      var el = document.getElementById('price-history-json');
+      var canvas = document.getElementById('price-history-canvas');
+      if (!el || !canvas || !el.textContent) { return; }
+      var payload = null;
+      try {
+        payload = JSON.parse(el.textContent);
+      } catch (e) {
+        return;
+      }
+      if (!payload || !payload.labels || !payload.datasets) { return; }
+      var ctx = canvas.getContext('2d');
+      if (!ctx) { return; }
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: payload.labels,
+          datasets: payload.datasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'nearest', intersect: false },
+          plugins: {
+            legend: { position: 'bottom' },
+            title: { display: false }
+          },
+          scales: {
+            x: {
+              ticks: { maxRotation: 45, minRotation: 30, autoSkip: true, maxTicksLimit: 12 }
+            },
+            y: {
+              title: { display: true, text: 'Price (USD)' },
+              beginAtZero: false
+            }
+          }
+        }
+      });
+    });
+    </script>
+  </section>
+  {% endif %}
+
   <section class="panel">
     <h2>Recent sale-style band</h2>
     {% if page.sold_band %}

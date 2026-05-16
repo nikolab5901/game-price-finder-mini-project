@@ -13,6 +13,15 @@ Game Price Finder is a small **browser-based** app backed by a Python server. Yo
 
 Numbers are **orientation only** (many sources reflect listings or promotional floors, not guaranteed resale comps). With **`USE_FIXTURES=true`** on the server you also get bundled fixture pages from **`demo_fixtures.json`** (synthetic demos) plus **`popular_catalog.json`** (~150 widely known titles with **public factual metadata** — title / year / platforms — and **illustrative** economics only). Offline IDs **`910001`–`910151`** are synthetic bundle keys, **not** real IGDB identifiers.
 
+**Fixture thumbnails:** Cards on **`/search`** use each fixture row’s stored **`cover_image_url`** (live IGDB routes still upgrade covers separately). Regenerate **`popular_catalog.json`** from [**`scripts/popular_catalog_seed.csv`**](scripts/popular_catalog_seed.csv) after edits:
+
+```powershell
+uv run python scripts/generate_popular_catalog.py
+uv run python scripts/generate_popular_catalog.py --enrich-steam-covers --steam-cover-confidence medium
+```
+
+With **`--enrich-steam-covers`**, the script calls Steam’s public Store Search/AppDetails APIs (rate-limit friendly delays + 429 backoff), then fills remaining blanks with **CheapShark game thumbnails** where available. Set **`RAWG_API_KEY`** (env or `--rawg-api-key`) for an optional third pass that queries RAWG search **`background_image`** values—helpful for console-heavy exclusives Steam/CheapShark omit. Optional CSV columns **`steam_app_id`** and **`cover_image_url`** force exact storefront IDs or artwork URLs per row. A few exclusives may still lack URLs until you supply **`cover_image_url`** on those CSV rows or rely on live IGDB covers instead of fixtures.
+
 **Hosting:** To give casual users the full catalog without asking them to install anything, deploy the FastAPI app and set Twitch secrets on the platform—see [DEPLOY.md](DEPLOY.md).
 
 ## Prerequisites (local development only)

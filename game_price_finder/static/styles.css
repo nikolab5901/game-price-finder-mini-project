@@ -689,3 +689,29 @@ code {
 .checklist-more a {
   color: var(--accent);
 }
+
+.price-history-panel .panel-lede {
+  margin-bottom: 0.75rem;
+}
+
+.price-history-chart-wrap {
+  position: relative;
+  width: 100%;
+  height: min(340px, 52vh);
+  margin: 0.5rem 0 1rem;
+}
+
+.price-history-fallback td,
+.price-history-fallback th {
+  font-size: 0.85rem;
+}
+
+.price-history-footnotes {
+  margin: 0.75rem 0 0;
+  padding-left: 1.1rem;
+  max-width: 72ch;
+}
+
+.price-history-footnotes li {
+  margin-bottom: 0.35rem;
+}

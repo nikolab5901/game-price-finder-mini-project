@@ -75,12 +75,39 @@ class SoldBand(BaseModel):
     note: str | None = None
 
 
+PriceHistorySource = Literal["isthereanydeal", "cheapshark"]
+
+
+class PriceHistoryPoint(BaseModel):
+    """Single observation for storefront price history tooling."""
+
+    at: datetime
+    price: float
+    currency: str = "USD"
+    caption: str = ""
+    series_key: str = ""
+
+
+class PriceHistoryDataset(BaseModel):
+    key: str
+    display_name: str
+    points: list[PriceHistoryPoint]
+
+
+class PriceHistoryChart(BaseModel):
+    title: str
+    footnotes: list[str] = Field(default_factory=list)
+    source: PriceHistorySource
+    datasets: list[PriceHistoryDataset] = Field(default_factory=list)
+
+
 class GamePricingPage(BaseModel):
     game: GameSummary
     estimates: list[PriceEstimate] = Field(default_factory=list)
     sources: list[SourceOffer] = Field(default_factory=list)
     sold_band: SoldBand | None = None
     methodology_notes: list[str] = Field(default_factory=list)
+    price_history_chart: PriceHistoryChart | None = None
 
 
 def utcnow() -> datetime:

@@ -30,7 +30,7 @@ Open http://127.0.0.1:8000 — search for **demo**, browse **`/search`** with an
 
 ## Project plans
 
-Implementation plan snapshots (numbered evolution): **[plans/README.md](plans/README.md)** — includes [`01-game-price-finder-python-uv.plan.md`](plans/01-game-price-finder-python-uv.plan.md) through [`08-buyer-seller-information-ux.plan.md`](plans/08-buyer-seller-information-ux.plan.md).
+Implementation plan snapshots (numbered evolution): **[plans/README.md](plans/README.md)** — includes [`01-game-price-finder-python-uv.plan.md`](plans/01-game-price-finder-python-uv.plan.md) through [`10-price-history-charts.plan.md`](plans/10-price-history-charts.plan.md).
 
 ## Live integrations
 
@@ -57,7 +57,8 @@ Retail chains without stable partner APIs surface as outbound links only (GameSt
 ```powershell
 uv sync                      # install deps from uv.lock
 uv run uvicorn game_price_finder.main:app --reload
-uv run python scripts/generate_popular_catalog.py   # rebuild popular_catalog.json after editing scripts/popular_catalog_seed.csv
+uv run python scripts/generate_popular_catalog.py    # rebuild JSON from CSV (fixtures metadata only)
+uv run python scripts/generate_popular_catalog.py --enrich-steam-covers --steam-cover-confidence medium   # + Steam/CheapShark/optional RAWG thumbnails (needs network)
 uv run python -m compileall game_price_finder
 ```
 

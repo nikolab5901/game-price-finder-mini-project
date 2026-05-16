@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote_plus
@@ -23,14 +24,25 @@ from game_price_finder.services.pricing import (
     enrich_fixture_page,
     steam_market_section,
 )
+from game_price_finder.services.price_history import build_price_history_chart, chartjs_payload
 from game_price_finder.services.rawg import rawg_get_game
 from game_price_finder.services.research_links import marketplace_query_for_game, research_listing_offers
 from game_price_finder.services.search_hints import batch_price_hints_for_games, maybe_fuzzy_suggestions
 from game_price_finder.services.steam import apply_steam_cover_fallback, resolve_steam_lookup
+from game_price_finder.services.cheapshark import fetch_cheapshark_snapshot
 
 PACKAGE_DIR = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(PACKAGE_DIR / "templates"))
 templates.env.filters["urlquote"] = lambda value: quote_plus(str(value))
+
+
+def _chartjs_json_filter(chart: Any) -> str:
+    if chart is None:
+        return "null"
+    return json.dumps(chartjs_payload(chart))
+
+
+templates.env.filters["chartjs_json"] = _chartjs_json_filter
 
 app = FastAPI(title="Game Price Finder", version="0.1.0")
 app.mount("/static", StaticFiles(directory=str(PACKAGE_DIR / "static")), name="static")
@@ -58,12 +70,20 @@ def feedback_admin_authorized(settings: Settings, token_query: str | None, autho
     return any(c == expected for c in candidates)
 
 
-async def augment_fixture_page(page: GamePricingPage) -> GamePricingPage:
+async def augment_fixture_page(page: GamePricingPage, settings: Settings) -> GamePricingPage:
     steam_lookup = await resolve_steam_lookup(page.game)
     enriched = apply_steam_cover_fallback(page.game, steam_lookup)
     page = enrich_fixture_page(page, enriched_game=enriched)
     steam_sources, steam_estimates, steam_notes = steam_market_section(steam_lookup)
-    cs_sources, cs_estimates, cs_notes = await cheapshark_market_section(enriched)
+
+    prefetch = await fetch_cheapshark_snapshot(enriched)
+    cs_sources, cs_estimates, cs_notes = await cheapshark_market_section(enriched, prefetch=prefetch)
+    price_chart = await build_price_history_chart(
+        enriched,
+        settings,
+        prefetch=prefetch,
+        steam_lookup=steam_lookup,
+    )
 
     urls = {s.url for s in page.sources if s.url}
     steam_extra = [s for s in steam_sources if not s.url or s.url not in urls]
@@ -89,6 +109,7 @@ async def augment_fixture_page(page: GamePricingPage) -> GamePricingPage:
             "estimates": [*page.estimates, *steam_estimates, *cs_estimates],
             "sources": [*page.sources, *steam_extra, *shark_extra, *hub_extra],
             "methodology_notes": [*page.methodology_notes, *addon_intro, *steam_notes, *cs_notes],
+            "price_history_chart": price_chart,
         },
     )
 
@@ -108,7 +129,14 @@ async def _assemble_live_detail(request: Request, game: GameSummary, settings: S
     else:
         ebay_skip_reason = "eBay developer credentials not configured — Browse API aggregation skipped."
 
-    cs_sources, cs_estimates, cs_notes = await cheapshark_market_section(game)
+    prefetch = await fetch_cheapshark_snapshot(game)
+    cs_sources, cs_estimates, cs_notes = await cheapshark_market_section(game, prefetch=prefetch)
+    chart = await build_price_history_chart(
+        game,
+        settings,
+        prefetch=prefetch,
+        steam_lookup=steam_lookup,
+    )
 
     page = assemble_game_page(
         game,
@@ -118,6 +146,7 @@ async def _assemble_live_detail(request: Request, game: GameSummary, settings: S
         cheapshark_sources=cs_sources,
         cheapshark_estimates=cs_estimates,
         cheapshark_notes=cs_notes,
+        price_history_chart=chart,
     )
 
     return templates.TemplateResponse(request, "game.html", {"page": page, "settings": settings})
@@ -297,7 +326,7 @@ async def game_detail(
 ) -> HTMLResponse:
     fixture_page = fixture_detail(igdb_id)
     if fixture_page is not None:
-        page = await augment_fixture_page(fixture_page)
+        page = await augment_fixture_page(fixture_page, settings)
         return templates.TemplateResponse(request, "game.html", {"page": page, "settings": settings})
 
     if not twitch_catalog_ready(settings):

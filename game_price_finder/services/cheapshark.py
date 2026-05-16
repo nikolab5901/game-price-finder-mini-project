@@ -96,6 +96,15 @@ async def cheapshark_deals_for_game(*, cheapshark_game_id: int, page_size: int =
     return [row for row in payload if isinstance(row, dict)]
 
 
+async def cheapshark_fetch_game_bundle(*, cheapshark_game_id: int, timeout: float = 25.0) -> dict[str, Any] | None:
+    """Full CheapShark game payload (info, cheapestPriceEver, embedded deals)."""
+    async with _cheapshark_client(timeout=timeout) as client:
+        response = await client.get(f"{CHEAPSHARK_BASE}/games", params={"id": str(cheapshark_game_id)})
+        response.raise_for_status()
+        payload = response.json()
+    return payload if isinstance(payload, dict) else None
+
+
 def pick_cheapshark_game_row(rows: list[dict[str, Any]], game: GameSummary) -> dict[str, Any] | None:
     if not rows:
         return None
@@ -123,15 +132,23 @@ def deal_price_usd(deal: dict[str, Any]) -> float | None:
     return None
 
 
-async def fetch_cheapshark_snapshot(game: GameSummary) -> tuple[list[dict[str, Any]], dict[str, Any] | None]:
+CheapSharkPrefetch = tuple[list[dict[str, Any]], dict[str, Any] | None, dict[str, Any] | None]
+
+
+async def fetch_cheapshark_snapshot(game: GameSummary) -> CheapSharkPrefetch:
     rows = await cheapshark_search_games(title=game.title)
     picked = pick_cheapshark_game_row(rows, game)
     if not picked:
-        return [], None
+        return [], None, None
     cg_id = picked.get("gameID")
     try:
         cheapshark_game_id = int(cg_id)
     except (TypeError, ValueError):
-        return [], None
-    deals = await cheapshark_deals_for_game(cheapshark_game_id=cheapshark_game_id)
-    return deals, picked
+        return [], picked, None
+    bundle = await cheapshark_fetch_game_bundle(cheapshark_game_id=cheapshark_game_id)
+    embedded = bundle.get("deals") if isinstance(bundle, dict) else None
+    if isinstance(embedded, list) and embedded:
+        deals_list = [d for d in embedded if isinstance(d, dict)]
+    else:
+        deals_list = await cheapshark_deals_for_game(cheapshark_game_id=cheapshark_game_id, page_size=30)
+    return deals_list, picked, bundle if isinstance(bundle, dict) else None

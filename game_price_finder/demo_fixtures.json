@@ -76,8 +76,10 @@
         "igdb_id": 900002,
         "title": "Demo: Lunar Kart Turbo",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2023
+        "cover_image_url": "https://cdn.akamai.steamstatic.com/steam/apps/582010/header.jpg",
+        "release_year": 2023,
+        "steam_app_id": 582010,
+        "cover_sources": ["steam:header", "demo:placeholder_art"]
       },
       "estimates": [
         {
@@ -129,7 +131,8 @@
       },
       "methodology_notes": [
         "Average rows distinguish asking vs sold basis where labels show it.",
-        "Fixture mode helps sellers sanity-check layout before wiring APIs."
+        "Fixture mode helps sellers sanity-check layout before wiring APIs.",
+        "Cover uses illustrative Steam storefront header art — fictional demo title."
       ]
     },
     {
@@ -137,8 +140,10 @@
         "igdb_id": 900003,
         "title": "Demo: Vault Survivors Chronicles",
         "platform_summary": "PC (Steam)",
-        "cover_image_url": null,
-        "release_year": 2025
+        "cover_image_url": "https://cdn.akamai.steamstatic.com/steam/apps/1794680/header.jpg",
+        "release_year": 2025,
+        "steam_app_id": 1794680,
+        "cover_sources": ["steam:header", "demo:placeholder_art"]
       },
       "estimates": [
         {
@@ -171,7 +176,8 @@
       "sold_band": null,
       "methodology_notes": [
         "Digital SKUs often lack consistent sold comps — placeholder omits sold band intentionally.",
-        "Live mode would still attempt eBay Browse aggregation when credentials exist."
+        "Live mode would still attempt eBay Browse aggregation when credentials exist.",
+        "Cover uses illustrative Steam storefront header art — fictional demo title."
       ]
     }
   ]

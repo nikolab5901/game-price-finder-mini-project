@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     rawg_api_key: str | None = None
     giant_bomb_api_key: str | None = None
 
+    itad_api_key: str | None = None
+
     catalog_merge_max_results: int = 40
     igdb_search_limit: int = 30
     catalog_rawg_limit: int = 15

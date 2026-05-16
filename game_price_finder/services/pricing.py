@@ -4,8 +4,8 @@ import statistics
 from typing import Any
 from urllib.parse import quote_plus
 
-from game_price_finder.models import GamePricingPage, GameSummary, PriceEstimate, SoldBand, SourceOffer, utcnow
-from game_price_finder.services.cheapshark import deal_price_usd, fetch_cheapshark_snapshot, store_id_to_name
+from game_price_finder.models import GamePricingPage, GameSummary, PriceEstimate, PriceHistoryChart, SoldBand, SourceOffer, utcnow
+from game_price_finder.services.cheapshark import CheapSharkPrefetch, deal_price_usd, fetch_cheapshark_snapshot, store_id_to_name
 from game_price_finder.services.research_links import marketplace_query_for_game, research_listing_offers
 from game_price_finder.services.steam import SteamLookupResult, steam_storefront_url
 
@@ -253,12 +253,16 @@ def steam_market_section(steam: SteamLookupResult | None) -> tuple[list[SourceOf
     return [offer], estimates, notes
 
 
-async def cheapshark_market_section(game: GameSummary) -> tuple[list[SourceOffer], list[PriceEstimate], list[str]]:
+async def cheapshark_market_section(
+    game: GameSummary,
+    *,
+    prefetch: CheapSharkPrefetch | None = None,
+) -> tuple[list[SourceOffer], list[PriceEstimate], list[str]]:
     now = utcnow()
     notes: list[str] = [
         "CheapShark aggregates promotions from authorized PC storefront partners — skew digital.",
     ]
-    deals, picked = await fetch_cheapshark_snapshot(game)
+    deals, picked, _bundle_unused = prefetch if prefetch is not None else await fetch_cheapshark_snapshot(game)
     if not picked:
         notes.append("CheapShark found no catalog row close to this IGDB title.")
         return [], [], notes
@@ -344,6 +348,7 @@ def assemble_game_page(
     cheapshark_sources: list[SourceOffer],
     cheapshark_estimates: list[PriceEstimate],
     cheapshark_notes: list[str],
+    price_history_chart: PriceHistoryChart | None = None,
 ) -> GamePricingPage:
     methodology: list[str] = [
         "How to read this board: physical resale asks (eBay) behave differently from Steam licenses or CheapShark-tracked PC sales.",
@@ -377,6 +382,7 @@ def assemble_game_page(
         sources=sources,
         sold_band=sold_band,
         methodology_notes=methodology,
+        price_history_chart=price_history_chart,
     )
 
 

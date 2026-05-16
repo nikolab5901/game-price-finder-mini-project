@@ -14,6 +14,8 @@ This folder holds **snapshots of Cursor-generated implementation plans** for thi
 | 6 | [06-user-manual-plans-index.plan.md](06-user-manual-plans-index.plan.md) | USAGE.md user manual; plan 03 snapshot in-repo; plans README index |
 | 7 | [07-expand-catalog-coverage.plan.md](07-expand-catalog-coverage.plan.md) | Offline `popular_catalog.json` + generator; configurable IGDB/RAWG/GB merge limits |
 | 8 | [08-buyer-seller-information-ux.plan.md](08-buyer-seller-information-ux.plan.md) | `/guides`; IGDB about-panel fields; eBay sold + SteamDB hubs; CheapShark signals; checklists |
+| 9 | [09-fixture-cover-artwork.plan.md](09-fixture-cover-artwork.plan.md) | Offline Steam/CheapShark/RAWG thumbnail enrichment for fixture JSON; CSV overrides |
+| 10 | [10-price-history-charts.plan.md](10-price-history-charts.plan.md) | Optional ITAD + CheapShark-backed price history chart on game detail (Chart.js) |
 
 ## Version history
 
