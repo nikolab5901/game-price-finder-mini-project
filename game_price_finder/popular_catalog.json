@@ -5,8 +5,11 @@
         "igdb_id": 910001,
         "title": "Super Mario Bros.",
         "platform_summary": "Nintendo Entertainment System",
-        "cover_image_url": null,
-        "release_year": 1985
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3aze.jpg",
+        "release_year": 1985,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -69,8 +72,11 @@
         "igdb_id": 910002,
         "title": "The Legend of Zelda",
         "platform_summary": "Nintendo Entertainment System",
-        "cover_image_url": null,
-        "release_year": 1986
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co1uii.jpg",
+        "release_year": 1986,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -133,11 +139,10 @@
         "igdb_id": 910003,
         "title": "Metroid",
         "platform_summary": "Nintendo Entertainment System",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3598640/532945e5ad3bf7c32aad1c08d9c393df9e693746/header.jpg?t=1742658423",
+        "cover_image_url": "https://cdn.fanatical.com/production/product/400x225/a395456d-9d1d-43a4-82c8-bf68a7afe20c.jpeg",
         "release_year": 1986,
-        "steam_app_id": 3598640,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -201,11 +206,11 @@
         "igdb_id": 910004,
         "title": "Castlevania",
         "platform_summary": "Nintendo Entertainment System",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/234080/header.jpg?t=1737486989",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/239250/capsule_231x87.jpg?t=1737506536",
         "release_year": 1986,
-        "steam_app_id": 234080,
+        "steam_app_id": 239250,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -269,11 +274,11 @@
         "igdb_id": 910005,
         "title": "Mega Man",
         "platform_summary": "Nintendo Entertainment System",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1484430/header.jpg?t=1608225166",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/742300/capsule_231x87.jpg?t=1770613022",
         "release_year": 1987,
-        "steam_app_id": 1484430,
+        "steam_app_id": 742300,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -405,11 +410,11 @@
         "igdb_id": 910007,
         "title": "Contra",
         "platform_summary": "Nintendo Entertainment System",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1997440/eb9d63745a66e057b9c077b427e3c60b00dd81e3/header.jpg?t=1774490144",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/224460/capsule_231x87.jpg?t=1776349734",
         "release_year": 1988,
-        "steam_app_id": 1997440,
+        "steam_app_id": 224460,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -473,11 +478,11 @@
         "igdb_id": 910008,
         "title": "Dragon Quest",
         "platform_summary": "Nintendo Entertainment System",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/410850/header.jpg?t=1778838421",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2436570/capsule_231x87.jpg?t=1734542581",
         "release_year": 1986,
-        "steam_app_id": 410850,
+        "steam_app_id": 2436570,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -541,11 +546,11 @@
         "igdb_id": 910009,
         "title": "Tetris",
         "platform_summary": "Multiple platforms",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1853860/header.jpg?t=1644505760",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/3180240/bbf45df30a6ea7f8c94dc909a364129f203073a7/capsule_231x87.jpg?t=1773073787",
         "release_year": 1989,
-        "steam_app_id": 1853860,
+        "steam_app_id": 3180240,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -609,11 +614,11 @@
         "igdb_id": 910010,
         "title": "SimCity",
         "platform_summary": "PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2741560/header.jpg?t=1777484800",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2741560/capsule_231x87.jpg?t=1777484800",
         "release_year": 1989,
         "steam_app_id": 2741560,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -745,11 +750,10 @@
         "igdb_id": 910012,
         "title": "Street Fighter II",
         "platform_summary": "Arcade / consoles",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1611210/header.jpg?t=1623136837",
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3t1e.jpg",
         "release_year": 1991,
-        "steam_app_id": 1611210,
         "cover_sources": [
-          "steam:header"
+          "curator:fallback_json"
         ]
       },
       "estimates": [
@@ -813,11 +817,11 @@
         "igdb_id": 910013,
         "title": "Sonic the Hedgehog",
         "platform_summary": "Sega Genesis",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3810940/002d7f5719bc700bac2faa643a795e1bcc0389eb/header.jpg?t=1762905968",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/202530/capsule_231x87.jpg?t=1762753056",
         "release_year": 1991,
-        "steam_app_id": 3810940,
+        "steam_app_id": 202530,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -949,11 +953,10 @@
         "igdb_id": 910015,
         "title": "Civilization",
         "platform_summary": "PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1436950/header.jpg?t=1680229510",
+        "cover_image_url": "https://us.gamesplanet.com/acache/17/01/1/us/packshot-8b4fcc7d0eb12b97290bc096d324a7fb.jpg",
         "release_year": 1991,
-        "steam_app_id": 1436950,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -1017,11 +1020,11 @@
         "igdb_id": 910016,
         "title": "The Secret of Monkey Island",
         "platform_summary": "PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/32360/header.jpg?t=1741729431",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/32360/capsule_231x87.jpg?t=1741729431",
         "release_year": 1990,
         "steam_app_id": 32360,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -1085,11 +1088,11 @@
         "igdb_id": 910017,
         "title": "Command & Conquer",
         "platform_summary": "PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/24800/header.jpg?t=1777415413",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1213210/capsule_231x87.jpg?t=1777415677",
         "release_year": 1995,
-        "steam_app_id": 24800,
+        "steam_app_id": 1213210,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -1221,8 +1224,11 @@
         "igdb_id": 910019,
         "title": "Super Metroid",
         "platform_summary": "Super Nintendo Entertainment System",
-        "cover_image_url": null,
-        "release_year": 1994
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co1o11.jpg",
+        "release_year": 1994,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -1285,11 +1291,11 @@
         "igdb_id": 910020,
         "title": "EarthBound",
         "platform_summary": "Super Nintendo Entertainment System",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/758610/header.jpg?t=1764676495",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/758610/capsule_231x87.jpg?t=1764676495",
         "release_year": 1994,
         "steam_app_id": 758610,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -1421,8 +1427,11 @@
         "igdb_id": 910022,
         "title": "Donkey Kong Country",
         "platform_summary": "Super Nintendo Entertainment System",
-        "cover_image_url": null,
-        "release_year": 1994
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3jhu.jpg",
+        "release_year": 1994,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -1553,8 +1562,11 @@
         "igdb_id": 910024,
         "title": "Super Mario World",
         "platform_summary": "Super Nintendo Entertainment System",
-        "cover_image_url": null,
-        "release_year": 1990
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co42ao.jpg",
+        "release_year": 1990,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -1617,8 +1629,11 @@
         "igdb_id": 910025,
         "title": "The Legend of Zelda: A Link to the Past",
         "platform_summary": "Super Nintendo Entertainment System",
-        "cover_image_url": null,
-        "release_year": 1991
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3vzn.jpg",
+        "release_year": 1991,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -1681,8 +1696,11 @@
         "igdb_id": 910026,
         "title": "Doom (1993)",
         "platform_summary": "PC",
-        "cover_image_url": null,
-        "release_year": 1993
+        "cover_image_url": "https://cdn.akamai.steamstatic.com/steam/apps/2280/header.jpg",
+        "release_year": 1993,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -1949,11 +1967,11 @@
         "igdb_id": 910030,
         "title": "Diablo II",
         "platform_summary": "PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4523200/5da5ba1715e29496a78352afc36d57ab26b5fa27/header.jpg?t=1778794371",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2536520/2a400c5821131f4525919029b03adf1168fdffd3/capsule_231x87.jpg?t=1774399170",
         "release_year": 2000,
-        "steam_app_id": 4523200,
+        "steam_app_id": 2536520,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -2085,11 +2103,10 @@
         "igdb_id": 910032,
         "title": "Deus Ex",
         "platform_summary": "PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/413360/header.jpg?t=1681397740",
+        "cover_image_url": "https://images.gog-statics.com/dc1e1f6d45f9bc9abb1d5990a4f0b66f0be1f8ea5c550cb95223ddce384f84b1_product_tile_117h.webp",
         "release_year": 2000,
-        "steam_app_id": 413360,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -2153,11 +2170,11 @@
         "igdb_id": 910033,
         "title": "The Sims",
         "platform_summary": "PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1235734/header.jpg?t=1757964370",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/47890/capsule_231x87.jpg?t=1738703889",
         "release_year": 2000,
-        "steam_app_id": 1235734,
+        "steam_app_id": 47890,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -2221,8 +2238,11 @@
         "igdb_id": 910034,
         "title": "Gran Turismo 3: A-Spec",
         "platform_summary": "PlayStation 2",
-        "cover_image_url": null,
-        "release_year": 2001
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co20ae.jpg",
+        "release_year": 2001,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -2285,11 +2305,11 @@
         "igdb_id": 910035,
         "title": "Metal Gear Solid 2: Sons of Liberty",
         "platform_summary": "PlayStation 2",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2131640/header.jpg?t=1737564625",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2131640/capsule_231x87.jpg?t=1737564625",
         "release_year": 2001,
         "steam_app_id": 2131640,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -2353,11 +2373,11 @@
         "igdb_id": 910036,
         "title": "Grand Theft Auto III",
         "platform_summary": "PlayStation 2 / PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1546970/header.jpg?t=1741117830",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1546970/capsule_231x87.jpg?t=1741117830",
         "release_year": 2001,
         "steam_app_id": 1546970,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -2557,11 +2577,10 @@
         "igdb_id": 910039,
         "title": "Halo: Combat Evolved",
         "platform_summary": "Xbox",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1064221/header.jpg?t=1634231276",
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co2r2r.jpg",
         "release_year": 2001,
-        "steam_app_id": 1064221,
         "cover_sources": [
-          "steam:header"
+          "curator:fallback_json"
         ]
       },
       "estimates": [
@@ -2625,8 +2644,11 @@
         "igdb_id": 910040,
         "title": "Super Smash Bros. Melee",
         "platform_summary": "Nintendo GameCube",
-        "cover_image_url": null,
-        "release_year": 2001
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co21yv.jpg",
+        "release_year": 2001,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -2757,8 +2779,11 @@
         "igdb_id": 910042,
         "title": "Shadow of the Colossus",
         "platform_summary": "PlayStation 2",
-        "cover_image_url": null,
-        "release_year": 2005
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co1ozz.jpg",
+        "release_year": 2005,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -2821,8 +2846,11 @@
         "igdb_id": 910043,
         "title": "God of War (2005)",
         "platform_summary": "PlayStation 2",
-        "cover_image_url": null,
-        "release_year": 2005
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3ddc.jpg",
+        "release_year": 2005,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -2885,8 +2913,11 @@
         "igdb_id": 910044,
         "title": "World of Warcraft",
         "platform_summary": "PC / macOS",
-        "cover_image_url": null,
-        "release_year": 2004
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co2l7z.jpg",
+        "release_year": 2004,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -3017,11 +3048,11 @@
         "igdb_id": 910046,
         "title": "The Elder Scrolls IV: Oblivion",
         "platform_summary": "PC / Xbox 360 / PlayStation 3",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/452070/9a80456005a0f260f1b4ff7d0e4044ba83b4adc2/header.jpg?t=1745334183",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2623190/4efc3257aabd776d4624da40146fb021d1ef5b38/capsule_231x87.jpg?t=1761681073",
         "release_year": 2006,
-        "steam_app_id": 452070,
+        "steam_app_id": 2623190,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -3085,11 +3116,11 @@
         "igdb_id": 910047,
         "title": "Gears of War",
         "platform_summary": "Xbox 360",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3010850/header.jpg?t=1774394049",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2523720/f0477240dce46254a81741ad45bbc8c642153331/capsule_231x87.jpg?t=1757024702",
         "release_year": 2006,
-        "steam_app_id": 3010850,
+        "steam_app_id": 2523720,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -3357,11 +3388,11 @@
         "igdb_id": 910051,
         "title": "Mass Effect",
         "platform_summary": "Xbox 360 / PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1238013/header.jpg?t=1598621580",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/17460/capsule_231x87.jpg?t=1777395273",
         "release_year": 2007,
-        "steam_app_id": 1238013,
+        "steam_app_id": 17460,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -3425,8 +3456,11 @@
         "igdb_id": 910052,
         "title": "Super Mario Galaxy",
         "platform_summary": "Wii",
-        "cover_image_url": null,
-        "release_year": 2007
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co21ro.jpg",
+        "release_year": 2007,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -3489,8 +3523,11 @@
         "igdb_id": 910053,
         "title": "The Legend of Zelda: Twilight Princess",
         "platform_summary": "Wii / GameCube",
-        "cover_image_url": null,
-        "release_year": 2006
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3w1h.jpg",
+        "release_year": 2006,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -3553,11 +3590,10 @@
         "igdb_id": 910054,
         "title": "Metal Gear Solid 4: Guns of the Patriots",
         "platform_summary": "PlayStation 3",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/4184400/458033bb7aad4e6b8a61af0f7798d23db2683864/header.jpg?t=1778709555",
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3qsv.jpg",
         "release_year": 2008,
-        "steam_app_id": 4184400,
         "cover_sources": [
-          "steam:header"
+          "curator:fallback_json"
         ]
       },
       "estimates": [
@@ -3689,11 +3725,11 @@
         "igdb_id": 910056,
         "title": "Grand Theft Auto IV",
         "platform_summary": "PlayStation 3 / Xbox 360 / PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/12210/header.jpg?t=1721061564",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/12210/capsule_231x87.jpg?t=1721061564",
         "release_year": 2008,
         "steam_app_id": 12210,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -3757,11 +3793,11 @@
         "igdb_id": 910057,
         "title": "Dark Souls",
         "platform_summary": "PlayStation 3 / Xbox 360 / PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/271942/header.jpg?t=1721683384",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/236430/capsule_231x87.jpg?t=1726158600",
         "release_year": 2011,
-        "steam_app_id": 271942,
+        "steam_app_id": 236430,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -3825,11 +3861,11 @@
         "igdb_id": 910058,
         "title": "The Elder Scrolls V: Skyrim",
         "platform_summary": "Multiple platforms",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/598120/header.jpg?t=1718030199",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/611670/capsule_231x87.jpg?t=1564002443",
         "release_year": 2011,
-        "steam_app_id": 598120,
+        "steam_app_id": 611670,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -3961,11 +3997,10 @@
         "igdb_id": 910060,
         "title": "Batman: Arkham City",
         "platform_summary": "Multiple platforms",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/200890/header.jpg?t=1447354705",
+        "cover_image_url": "https://us.gamesplanet.com/acache/15/46/1/us/packshot-92b3116edd0584b61a131fa716d0a766.jpg",
         "release_year": 2011,
-        "steam_app_id": 200890,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -4029,8 +4064,11 @@
         "igdb_id": 910061,
         "title": "Uncharted 3: Drake's Deception",
         "platform_summary": "PlayStation 3",
-        "cover_image_url": null,
-        "release_year": 2011
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co1tp8.jpg",
+        "release_year": 2011,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -4093,8 +4131,11 @@
         "igdb_id": 910062,
         "title": "The Legend of Zelda: Skyward Sword",
         "platform_summary": "Wii",
-        "cover_image_url": null,
-        "release_year": 2011
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3pdq.jpg",
+        "release_year": 2011,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -4225,8 +4266,11 @@
         "igdb_id": 910064,
         "title": "Bloodborne",
         "platform_summary": "PlayStation 4",
-        "cover_image_url": null,
-        "release_year": 2015
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co1rba.jpg",
+        "release_year": 2015,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -4899,8 +4943,11 @@
         "igdb_id": 910074,
         "title": "God of War (2018)",
         "platform_summary": "PlayStation 4 / PC",
-        "cover_image_url": null,
-        "release_year": 2018
+        "cover_image_url": "https://cdn.akamai.steamstatic.com/steam/apps/1593500/header.jpg",
+        "release_year": 2018,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -5099,8 +5146,11 @@
         "igdb_id": 910077,
         "title": "Fortnite",
         "platform_summary": "Multiple platforms",
-        "cover_image_url": null,
-        "release_year": 2017
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co2ekt.jpg",
+        "release_year": 2017,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -5163,8 +5213,11 @@
         "igdb_id": 910078,
         "title": "PlayerUnknown's Battlegrounds",
         "platform_summary": "Multiple platforms",
-        "cover_image_url": null,
-        "release_year": 2017
+        "cover_image_url": "https://cdn.akamai.steamstatic.com/steam/apps/578080/header.jpg",
+        "release_year": 2017,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -5227,11 +5280,11 @@
         "igdb_id": 910079,
         "title": "Minecraft",
         "platform_summary": "Multiple platforms",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1672980/header.jpg?t=1632323294",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1928870/capsule_231x87.jpg?t=1746133966",
         "release_year": 2011,
-        "steam_app_id": 1672980,
+        "steam_app_id": 1928870,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -5431,8 +5484,11 @@
         "igdb_id": 910082,
         "title": "Animal Crossing: New Horizons",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2020
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3wls.jpg",
+        "release_year": 2020,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -5495,11 +5551,11 @@
         "igdb_id": 910083,
         "title": "The Last of Us Part II",
         "platform_summary": "PlayStation 4 / PlayStation 5",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2531310/header.jpg?t=1750959180",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2531310/29904ca69ae022479d64207cc40ce549d0a68acb/capsule_231x87.jpg?t=1750959180",
         "release_year": 2020,
         "steam_app_id": 2531310,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -5563,11 +5619,11 @@
         "igdb_id": 910084,
         "title": "Ghost of Tsushima",
         "platform_summary": "PlayStation 4 / PlayStation 5",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3929730/f770dc61747e7da87276f11dbad7ac85d479220d/header.jpg?t=1763579547",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2215430/capsule_231x87.jpg?t=1763409398",
         "release_year": 2020,
-        "steam_app_id": 3929730,
+        "steam_app_id": 2215430,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -5835,11 +5891,11 @@
         "igdb_id": 910088,
         "title": "Horizon Forbidden West",
         "platform_summary": "PlayStation 4 / PlayStation 5",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2420110/header.jpg?t=1776465869",
+        "cover_image_url": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/2420110/capsule_231x87.jpg?t=1776465869",
         "release_year": 2022,
         "steam_app_id": 2420110,
         "cover_sources": [
-          "steam:header"
+          "cheapshark:thumb"
         ]
       },
       "estimates": [
@@ -5903,8 +5959,11 @@
         "igdb_id": 910089,
         "title": "Xenoblade Chronicles 3",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2022
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co4ocq.jpg",
+        "release_year": 2022,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -5967,8 +6026,11 @@
         "igdb_id": 910090,
         "title": "Splatoon 3",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2022
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co2twc.jpg",
+        "release_year": 2022,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -6031,8 +6093,11 @@
         "igdb_id": 910091,
         "title": "Pokémon Scarlet and Violet",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2022
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co4ko9.jpg",
+        "release_year": 2022,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -6095,8 +6160,11 @@
         "igdb_id": 910092,
         "title": "Bayonetta 3",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2022
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3vl8.jpg",
+        "release_year": 2022,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -6159,8 +6227,11 @@
         "igdb_id": 910093,
         "title": "Kirby and the Forgotten Land",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2022
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3vlw.jpg",
+        "release_year": 2022,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -6223,8 +6294,11 @@
         "igdb_id": 910094,
         "title": "Metroid Dread",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2021
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co39zx.jpg",
+        "release_year": 2021,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -6287,8 +6361,11 @@
         "igdb_id": 910095,
         "title": "Super Mario Odyssey",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2017
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co1mxf.jpg",
+        "release_year": 2017,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -6351,8 +6428,11 @@
         "igdb_id": 910096,
         "title": "The Legend of Zelda: Breath of the Wild",
         "platform_summary": "Nintendo Switch / Wii U",
-        "cover_image_url": null,
-        "release_year": 2017
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3p2d.jpg",
+        "release_year": 2017,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -6415,8 +6495,11 @@
         "igdb_id": 910097,
         "title": "The Legend of Zelda: Tears of the Kingdom",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2023
+        "cover_image_url": "https://lutris.net/media/igdb/co5vmg.png",
+        "release_year": 2023,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -6479,8 +6562,11 @@
         "igdb_id": 910098,
         "title": "Super Mario Bros. Wonder",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2023
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co6nnl.jpg",
+        "release_year": 2023,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -6747,8 +6833,11 @@
         "igdb_id": 910102,
         "title": "Alan Wake II",
         "platform_summary": "Multiple platforms",
-        "cover_image_url": null,
-        "release_year": 2023
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co4a8u.jpg",
+        "release_year": 2023,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -7083,8 +7172,11 @@
         "igdb_id": 910107,
         "title": "Resident Evil 4 (2023 remake)",
         "platform_summary": "Multiple platforms",
-        "cover_image_url": null,
-        "release_year": 2023
+        "cover_image_url": "https://cdn.akamai.steamstatic.com/steam/apps/2050650/header.jpg",
+        "release_year": 2023,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -7623,8 +7715,11 @@
         "igdb_id": 910115,
         "title": "FIFA 23",
         "platform_summary": "Multiple platforms",
-        "cover_image_url": null,
-        "release_year": 2022
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co4zw5.jpg",
+        "release_year": 2022,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -7687,8 +7782,11 @@
         "igdb_id": 910116,
         "title": "NBA 2K24",
         "platform_summary": "Multiple platforms",
-        "cover_image_url": null,
-        "release_year": 2023
+        "cover_image_url": "https://cdn.akamai.steamstatic.com/steam/apps/2338770/header.jpg",
+        "release_year": 2023,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -7751,8 +7849,11 @@
         "igdb_id": 910117,
         "title": "Gran Turismo 7",
         "platform_summary": "PlayStation 4 / PlayStation 5",
-        "cover_image_url": null,
-        "release_year": 2022
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co2g84.jpg",
+        "release_year": 2022,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -8903,11 +9004,10 @@
         "igdb_id": 910134,
         "title": "Astro Bot",
         "platform_summary": "PlayStation 5",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/2232520/header.jpg?t=1750958167",
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co8aad.jpg",
         "release_year": 2024,
-        "steam_app_id": 2232520,
         "cover_sources": [
-          "steam:header"
+          "curator:fallback_json"
         ]
       },
       "estimates": [
@@ -8971,8 +9071,11 @@
         "igdb_id": 910135,
         "title": "Super Mario RPG",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2023
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co3egs.jpg",
+        "release_year": 2023,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -9035,8 +9138,11 @@
         "igdb_id": 910136,
         "title": "Paper Mario: The Thousand-Year Door",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2024
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co9aqz.jpg",
+        "release_year": 2024,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -9099,8 +9205,11 @@
         "igdb_id": 910137,
         "title": "Luigi's Mansion 3",
         "platform_summary": "Nintendo Switch",
-        "cover_image_url": null,
-        "release_year": 2019
+        "cover_image_url": "https://lutris.net/media/igdb/cover_big/co22a9.jpg",
+        "release_year": 2019,
+        "cover_sources": [
+          "curator:fallback_json"
+        ]
       },
       "estimates": [
         {
@@ -9911,11 +10020,10 @@
         "igdb_id": 910149,
         "title": "Euro Truck Simulator 2",
         "platform_summary": "PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1650650/036db16c4db20c347c94dcff4f0f4ac1c36f8728/header.jpg?t=1753959800",
+        "cover_image_url": "https://cdn.akamai.steamstatic.com/steam/apps/227300/header.jpg",
         "release_year": 2012,
-        "steam_app_id": 1650650,
         "cover_sources": [
-          "steam:header"
+          "curator:fallback_json"
         ]
       },
       "estimates": [
@@ -9979,11 +10087,10 @@
         "igdb_id": 910150,
         "title": "Microsoft Flight Simulator",
         "platform_summary": "Xbox Series X|S / PC",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/314160/header.jpg?t=1667504069",
+        "cover_image_url": "https://cdn.akamai.steamstatic.com/steam/apps/1250410/header.jpg",
         "release_year": 2020,
-        "steam_app_id": 314160,
         "cover_sources": [
-          "steam:header"
+          "curator:fallback_json"
         ]
       },
       "estimates": [
@@ -10047,11 +10154,10 @@
         "igdb_id": 910151,
         "title": "Age of Empires IV",
         "platform_summary": "PC / Xbox",
-        "cover_image_url": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/1846820/header.jpg?t=1684345899",
+        "cover_image_url": "https://cdn.akamai.steamstatic.com/steam/apps/1466860/header.jpg",
         "release_year": 2021,
-        "steam_app_id": 1846820,
         "cover_sources": [
-          "steam:header"
+          "curator:fallback_json"
         ]
       },
       "estimates": [

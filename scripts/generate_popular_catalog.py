@@ -7,6 +7,14 @@ Run from repo root:
     uv run python scripts/generate_popular_catalog.py
     uv run python scripts/generate_popular_catalog.py --enrich-steam-covers
 
+After CSV-only regeneration you may still have cover gaps — merge Steam/CheapShark thumbs from
+`scripts/cover_fallbacks_override.json`, then refresh Lutris-derived rows and optionally patch JSON in place:
+
+    uv run python scripts/populate_cover_fallbacks_lutris.py
+    uv run python scripts/patch_catalog_covers_from_fallbacks.py
+
+Use `--fail-on-missing-covers` after steam/RAWG passes to CI-guard complete artwork.
+
 Optional CSV columns (headers): steam_app_id, cover_image_url — manual overrides per row.
 """
 
@@ -30,8 +38,56 @@ if str(ROOT) not in sys.path:
 
 CSV_PATH = ROOT / "scripts" / "popular_catalog_seed.csv"
 OUT_PATH = ROOT / "game_price_finder" / "popular_catalog.json"
+COVER_FALLBACK_PATH = ROOT / "scripts" / "cover_fallbacks_override.json"
 
 START_SYNTHETIC_ID = 910001
+
+
+def apply_cover_fallback_overrides(entries: list[dict], path: Path) -> None:
+    """Merge curator URLs into games still missing covers (by igdb id or exact title)."""
+    if not path.is_file():
+        return
+    try:
+        blob = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        raise SystemExit(f"Invalid JSON in {path}") from None
+    if not isinstance(blob, dict):
+        return
+
+    id_map: dict[str, str] = {}
+    title_map: dict[str, str] = {}
+
+    raw_by_id = blob.get("by_igdb_id")
+    if isinstance(raw_by_id, dict):
+        for key, url in raw_by_id.items():
+            if isinstance(url, str) and url.startswith("http"):
+                id_map[str(key)] = url
+    raw_by_title = blob.get("by_title")
+    if isinstance(raw_by_title, dict):
+        for key, url in raw_by_title.items():
+            if isinstance(url, str) and url.startswith("http"):
+                title_map[str(key)] = url
+
+    if not id_map and not title_map:
+        for key, url in blob.items():
+            if key == "_comment":
+                continue
+            if isinstance(key, str) and key.isdigit() and isinstance(url, str) and url.startswith("http"):
+                id_map[key] = url
+
+    for e in entries:
+        g = e["game"]
+        if g.get("cover_image_url"):
+            continue
+        gid = g.get("igdb_id")
+        url = id_map.get(str(gid)) if gid is not None else None
+        if not url:
+            tkey = str(g["title"])
+            url = title_map.get(tkey)
+        if isinstance(url, str) and url.startswith("http"):
+            g["cover_image_url"] = url
+            merged = [*list(g.get("cover_sources") or []), "curator:fallback_json"]
+            g["cover_sources"] = merged
 
 _FIXED_AS_OF = "2026-05-01T18:00:00Z"
 
@@ -446,6 +502,22 @@ def main() -> None:
         default=os.environ.get("RAWG_API_KEY", ""),
         help="RAWG API key for a final thumbnail pass on gaps (or set RAWG_API_KEY env).",
     )
+    parser.add_argument(
+        "--cover-fallbacks-json",
+        type=Path,
+        default=COVER_FALLBACK_PATH,
+        help="Merge URLs for remaining gaps from this JSON (by_igdb_id / flat numeric keys / by_title).",
+    )
+    parser.add_argument(
+        "--no-cover-fallbacks",
+        action="store_true",
+        help="Skip merge from scripts/cover_fallbacks_override.json.",
+    )
+    parser.add_argument(
+        "--fail-on-missing-covers",
+        action="store_true",
+        help="Exit with code 2 if any game still lacks cover_image_url after merges.",
+    )
     args = parser.parse_args()
 
     seed_rows = load_rows(args.csv)
@@ -504,7 +576,18 @@ def main() -> None:
 
         asyncio.run(_enrich_pipeline())
 
+    fb_path = args.cover_fallbacks_json
+    if not args.no_cover_fallbacks:
+        apply_cover_fallback_overrides(entries, fb_path)
+
     covered = sum(1 for e in entries if e["game"].get("cover_image_url"))
+    if args.fail_on_missing_covers:
+        misses = sum(1 for e in entries if not e["game"].get("cover_image_url"))
+        if misses > 0:
+            raise SystemExit(
+                f"Missing cover_image_url for {misses} entries after enrichment + fallbacks; "
+                f"expand {fb_path.relative_to(ROOT)!s} / Steam/RAWG keys.",
+            )
     payload = {"entries": entries}
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

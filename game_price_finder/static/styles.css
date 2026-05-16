@@ -690,11 +690,201 @@ code {
   color: var(--accent);
 }
 
-.price-history-panel .panel-lede {
+.price-explorer .panel-lede.pe-subtitle {
+  margin-top: 0.35rem;
+}
+
+.price-explorer .pe-subtitle {
   margin-bottom: 0.75rem;
 }
 
-.price-history-chart-wrap {
+.pe-title-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.pe-main-title {
+  margin: 0;
+  font-size: 1.22rem;
+  letter-spacing: -0.02em;
+}
+
+.pe-info-link {
+  flex-shrink: 0;
+}
+
+.pe-query-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0.35rem 0 1rem;
+}
+
+.pe-dot-marker {
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 28%, transparent);
+}
+
+.pe-query-title {
+  font-weight: 600;
+  font-size: 0.98rem;
+}
+
+.pe-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.65rem 1.35rem;
+  padding: 0.65rem 0.85rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  background: color-mix(in srgb, var(--panel) 70%, var(--bg));
+}
+
+.pe-toolbar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  min-width: 6.5rem;
+}
+
+.pe-toolbar-label {
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.68rem !important;
+}
+
+.pe-toolbar-value {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.pe-toolbar-select-wrap {
+  min-width: 10rem;
+}
+
+.pe-select {
+  margin-top: 0.08rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.88rem;
+  max-width: 100%;
+}
+
+.pe-submit {
+  padding: 0.35rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--accent) 18%, var(--panel));
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.pe-insights {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.25rem, 1fr));
+  gap: 0.55rem;
+  margin: 0 0 0.95rem;
+  padding: 0;
+  list-style: none;
+}
+
+.pe-insight-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.52rem 0.62rem;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--border) 90%, transparent);
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+}
+
+.pe-insight-label {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.pe-insight-value {
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.pe-insight-hint {
+  line-height: 1.35;
+}
+
+.pe-series-bar {
+  margin-bottom: 0.85rem;
+}
+
+.pe-series-bar-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.pe-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.pe-chip {
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+  background: color-mix(in srgb, var(--accent) 14%, var(--panel));
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8rem;
+  padding: 0.28rem 0.72rem;
+  cursor: pointer;
+}
+
+.pe-chip:hover,
+.pe-chip:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.pe-chip-off {
+  opacity: 0.45;
+  text-decoration: line-through;
+}
+
+.pe-chart-shell {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.35rem;
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+}
+
+.pe-events-details {
+  margin-top: 0.75rem;
+}
+
+.pe-events-details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.price-explorer .price-history-chart-wrap {
   position: relative;
   width: 100%;
   height: min(340px, 52vh);

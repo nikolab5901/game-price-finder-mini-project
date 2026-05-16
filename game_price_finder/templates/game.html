@@ -50,51 +50,112 @@
   </section>
   {% endif %}
 
-  <section class="panel panel-intro">
-    <h2 class="panel-title">Average estimates</h2>
-    <p class="muted small panel-lede">
-      Cards summarize automated pulls — each tag shows condition plus whether the figure reflects asks versus illustrative demos.
-    </p>
-    {% if page.estimates %}
-    <div class="stat-grid">
-      {% for e in page.estimates %}
-      <div class="stat-card">
-        <p class="stat-label">{{ e.channel | capitalize }} · {{ e.basis | capitalize }}</p>
-        <p class="stat-value">{{ money(e.value_usd) }}</p>
-        <p class="muted small">
-          {% if e.low_usd is not none and e.high_usd is not none %}
-          Range {{ money(e.low_usd) }} – {{ money(e.high_usd) }}
-          {% endif %}
-          {% if e.sample_size %} · n={{ e.sample_size }}{% endif %}
-          {% if e.window_days %} · {{ e.window_days }}d window{% endif %}
-        </p>
-        {% if e.as_of %}
-        <p class="muted tiny">Updated {{ e.as_of.strftime('%Y-%m-%d %H:%M UTC') }}</p>
-        {% endif %}
-        {% if e.disclaimer %}
-        <p class="tiny disclaimer">{{ e.disclaimer }}</p>
-        {% endif %}
-      </div>
-      {% endfor %}
-    </div>
-    {% else %}
-    <p class="muted">No automated averages yet — configure APIs or widen marketplace coverage.</p>
-    {% endif %}
-  </section>
-
   {% if page.price_history_chart %}
-  <section class="panel price-history-panel" aria-labelledby="price-history-heading">
-    <h2 id="price-history-heading" class="panel-title">Price history</h2>
-    <p class="muted small panel-lede">{{ page.price_history_chart.title }}</p>
-    <div class="price-history-chart-wrap">
+  <section class="panel price-explorer" aria-labelledby="ph-explore-heading">
+    <div class="pe-card-head">
+      <div class="pe-title-line">
+        <h2 id="ph-explore-heading" class="pe-main-title">Price over time</h2>
+        <a href="#price-explorer-notes" class="pe-info-link muted tiny">Sources &amp; notes</a>
+      </div>
+      <p class="muted small panel-lede pe-subtitle">{{ page.price_history_chart.title }}</p>
+
+      <div class="pe-query-row">
+        <span class="pe-dot-marker" aria-hidden="true"></span>
+        <span class="pe-query-title">{{ page.game.title }}</span>
+      </div>
+
+      <form class="pe-toolbar" method="get" action="{{ request.url.path }}" aria-label="History filters">
+        <div class="pe-toolbar-item">
+          <span class="pe-toolbar-label muted tiny">Region</span>
+          <span class="pe-toolbar-value">United States</span>
+        </div>
+        <div class="pe-toolbar-item">
+          <span class="pe-toolbar-label muted tiny">Signal</span>
+          <span class="pe-toolbar-value">Tracked storefront (USD)</span>
+        </div>
+        {% if page.price_history_chart.history_window_adjustable %}
+        <div class="pe-toolbar-item pe-toolbar-select-wrap">
+          <label class="pe-toolbar-label muted tiny" for="history-window-select">History window</label>
+          <select id="history-window-select" name="history_window" class="pe-select" onchange="this.form.submit()">
+            <option value="all" {% if page.price_history_chart.history_window_key == 'all' %}selected{% endif %}>All available</option>
+            <option value="365d" {% if page.price_history_chart.history_window_key == '365d' %}selected{% endif %}>Past year</option>
+            <option value="90d" {% if page.price_history_chart.history_window_key == '90d' %}selected{% endif %}>Past 90 days</option>
+            <option value="30d" {% if page.price_history_chart.history_window_key == '30d' %}selected{% endif %}>Past 30 days</option>
+          </select>
+        </div>
+        {% else %}
+        <div class="pe-toolbar-item">
+          <span class="pe-toolbar-label muted tiny">History window</span>
+          <span class="pe-toolbar-value muted" title="CheapShark returns sparse milestones rather than daily storefront logs.">&nbsp;Fixed span (milestones)</span>
+        </div>
+        {% endif %}
+        <noscript><div class="pe-toolbar-item"><button type="submit" class="pe-submit">Apply</button></div></noscript>
+      </form>
+
+      {% if page.price_history_chart.insight_rows %}
+      <ul class="pe-insights" aria-label="Price history summary stats">
+        {% for row in page.price_history_chart.insight_rows %}
+        <li class="pe-insight-tile">
+          <span class="pe-insight-label muted tiny">{{ row.label }}</span>
+          <span class="pe-insight-value">{{ row.value }}</span>
+          {% if row.hint %}
+          <span class="pe-insight-hint muted tiny">{{ row.hint }}</span>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if page.price_history_chart.datasets | length > 1 %}
+      <div class="pe-series-bar" aria-label="Compare storefront traces">
+        <span class="pe-series-bar-label muted tiny">Compare lines</span>
+        <div class="pe-chip-row" id="price-history-series-chips">
+          {% for ds in page.price_history_chart.datasets %}
+          <button type="button" class="pe-chip" data-ph-ds="{{ loop.index0 }}">{{ ds.display_name }}</button>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="price-history-chart-wrap pe-chart-shell">
       <canvas
         id="price-history-canvas"
-        height="260"
-        width="720"
+        height="320"
+        width="980"
         role="img"
-        aria-labelledby="price-history-heading"
+        aria-labelledby="ph-explore-heading"
         aria-describedby="price-history-datatable"></canvas>
     </div>
+
+    <details class="pe-events-details">
+      <summary>Underlying points (table)</summary>
+      <div class="table-scroll">
+        <table class="price-history-fallback">
+          <thead>
+            <tr>
+              <th>When (UTC)</th>
+              <th>Series</th>
+              <th>Price</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ds in page.price_history_chart.datasets %}
+            {% for p in ds.points %}
+            <tr>
+              <td>{{ p.at.strftime('%Y-%m-%d %H:%M') }}</td>
+              <td>{{ ds.display_name }}</td>
+              <td>{{ '%.2f' % p.price }} {{ p.currency }}</td>
+              <td class="muted">{{ p.caption }}</td>
+            </tr>
+            {% endfor %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </details>
+
     <noscript>
       <div class="table-scroll">
         <table class="price-history-fallback">
@@ -142,8 +203,9 @@
         {% endfor %}
       </tbody>
     </table>
+
     {% if page.price_history_chart.footnotes %}
-    <ul class="muted small price-history-footnotes">
+    <ul id="price-explorer-notes" class="muted small price-history-footnotes">
       {% for note in page.price_history_chart.footnotes %}
       <li>{{ note }}</li>
       {% endfor %}
@@ -163,37 +225,132 @@
         return;
       }
       if (!payload || !payload.labels || !payload.datasets) { return; }
+      var gridColor = typeof matchMedia !== 'undefined' && matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'rgba(159,176,195,0.18)'
+        : 'rgba(19,32,50,0.12)';
+      var tickMuted = typeof matchMedia !== 'undefined' && matchMedia('(prefers-color-scheme: dark)').matches
+        ? '#aab8c9'
+        : '#5c6c80';
+
+      function formatChartDate(iso) {
+        try {
+          var d = new Date(iso);
+          if (isNaN(d.getTime())) { return (iso || '').split('T')[0] || ''; }
+          var opts = { month: 'short', day: 'numeric' };
+          var yNow = new Date().getFullYear();
+          if (d.getFullYear() !== yNow) { opts.year = 'numeric'; }
+          return d.toLocaleDateString(undefined, opts);
+        } catch (_) {
+          return iso;
+        }
+      }
+
       var ctx = canvas.getContext('2d');
       if (!ctx) { return; }
-      new Chart(ctx, {
+
+      payload.datasets.forEach(function (ds) {
+        ds.borderWidth = ds.borderWidth != null ? ds.borderWidth : 2;
+      });
+
+      var rootStyles = getComputedStyle(document.documentElement);
+      var accent = (rootStyles.getPropertyValue('--accent') || '#1565c0').trim();
+      if (payload.datasets.length === 1) {
+        payload.datasets[0].borderColor = accent;
+      }
+
+      var chart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: payload.labels,
+          labels: payload.labels.map(formatChartDate),
           datasets: payload.datasets
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          interaction: { mode: 'nearest', intersect: false },
+          interaction: { mode: 'index', intersect: false },
           plugins: {
-            legend: { position: 'bottom' },
-            title: { display: false }
+            legend: { display: payload.datasets.length > 1 },
+            tooltip: {
+              callbacks: {
+                title: function (items) {
+                  if (!items.length) return '';
+                  var i = items[0].dataIndex;
+                  var raw = payload.labels[i];
+                  try {
+                    var d = new Date(raw);
+                    return isNaN(d.getTime()) ? raw : d.toUTCString().slice(0, 22) + ' UTC';
+                  } catch (_) { return raw; }
+                },
+                label: function (ctx) {
+                  var y = ctx.parsed.y;
+                  if (y == null) return ctx.dataset.label + ': —';
+                  return ctx.dataset.label + ': $' + y.toFixed(2);
+                }
+              }
+            }
           },
           scales: {
             x: {
-              ticks: { maxRotation: 45, minRotation: 30, autoSkip: true, maxTicksLimit: 12 }
+              grid: { display: true, color: gridColor, drawTicks: false },
+              ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 14, color: tickMuted },
+              border: { display: false }
             },
             y: {
-              title: { display: true, text: 'Price (USD)' },
+              title: { display: true, text: 'Price (USD)', color: tickMuted },
+              grid: { color: gridColor },
+              ticks: { color: tickMuted },
               beginAtZero: false
             }
           }
         }
       });
+
+      document.querySelectorAll('#price-history-series-chips button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var i = parseInt(btn.getAttribute('data-ph-ds'), 10);
+          if (isNaN(i)) return;
+          var vis = chart.isDatasetVisible(i);
+          chart.setDatasetVisibility(i, !vis);
+          chart.update();
+          btn.classList.toggle('pe-chip-off', !chart.isDatasetVisible(i));
+        });
+      });
     });
     </script>
   </section>
   {% endif %}
+
+  <section class="panel panel-intro">
+    <h2 class="panel-title">Average estimates</h2>
+    <p class="muted small panel-lede">
+      Cards summarize automated pulls — each tag shows condition plus whether the figure reflects asks versus illustrative demos.
+    </p>
+    {% if page.estimates %}
+    <div class="stat-grid">
+      {% for e in page.estimates %}
+      <div class="stat-card">
+        <p class="stat-label">{{ e.channel | capitalize }} · {{ e.basis | capitalize }}</p>
+        <p class="stat-value">{{ money(e.value_usd) }}</p>
+        <p class="muted small">
+          {% if e.low_usd is not none and e.high_usd is not none %}
+          Range {{ money(e.low_usd) }} – {{ money(e.high_usd) }}
+          {% endif %}
+          {% if e.sample_size %} · n={{ e.sample_size }}{% endif %}
+          {% if e.window_days %} · {{ e.window_days }}d window{% endif %}
+        </p>
+        {% if e.as_of %}
+        <p class="muted tiny">Updated {{ e.as_of.strftime('%Y-%m-%d %H:%M UTC') }}</p>
+        {% endif %}
+        {% if e.disclaimer %}
+        <p class="tiny disclaimer">{{ e.disclaimer }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="muted">No automated averages yet — configure APIs or widen marketplace coverage.</p>
+    {% endif %}
+  </section>
 
   <section class="panel">
     <h2>Recent sale-style band</h2>

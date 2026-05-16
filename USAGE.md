@@ -20,7 +20,16 @@ uv run python scripts/generate_popular_catalog.py
 uv run python scripts/generate_popular_catalog.py --enrich-steam-covers --steam-cover-confidence medium
 ```
 
-With **`--enrich-steam-covers`**, the script calls Steam’s public Store Search/AppDetails APIs (rate-limit friendly delays + 429 backoff), then fills remaining blanks with **CheapShark game thumbnails** where available. Set **`RAWG_API_KEY`** (env or `--rawg-api-key`) for an optional third pass that queries RAWG search **`background_image`** values—helpful for console-heavy exclusives Steam/CheapShark omit. Optional CSV columns **`steam_app_id`** and **`cover_image_url`** force exact storefront IDs or artwork URLs per row. A few exclusives may still lack URLs until you supply **`cover_image_url`** on those CSV rows or rely on live IGDB covers instead of fixtures.
+With **`--enrich-steam-covers`**, the script calls Steam’s public Store Search/AppDetails APIs (rate-limit friendly delays + 429 backoff), then fills remaining blanks with **CheapShark game thumbnails** where available. Set **`RAWG_API_KEY`** (env or `--rawg-api-key`) for an optional third pass that queries RAWG search **`background_image`** values—helpful for console-heavy exclusives Steam/CheapShark omit. Optional CSV columns **`steam_app_id`** and **`cover_image_url`** force exact storefront IDs or artwork URLs per row.
+
+The generator also merges **`scripts/cover_fallbacks_override.json`** (Steam storefront headers plus Lutris/IGDB-cover URLs refreshed by **`scripts/populate_cover_fallbacks_lutris.py`**). After a CSV regeneration that wipes artwork, rerun:
+
+```powershell
+uv run python scripts/populate_cover_fallbacks_lutris.py
+uv run python scripts/patch_catalog_covers_from_fallbacks.py
+```
+
+Use **`scripts/generate_popular_catalog.py --fail-on-missing-covers`** to fail the build when any bundled row still lacks a thumbnail after those merges.
 
 **Hosting:** To give casual users the full catalog without asking them to install anything, deploy the FastAPI app and set Twitch secrets on the platform—see [DEPLOY.md](DEPLOY.md).
 

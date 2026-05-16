@@ -9,6 +9,7 @@ from game_price_finder.models import (
     GameSummary,
     PriceHistoryChart,
     PriceHistoryDataset,
+    PriceHistoryInsightRow,
     PriceHistoryPoint,
     utcnow,
 )
@@ -21,6 +22,128 @@ if TYPE_CHECKING:
 _MAX_ROWS_PER_HISTORY = 400
 _MAX_SHOPS_SERIES = 10
 _HISTORY_SINCE_YEAR_FALLBACK = 2008
+
+_HISTORY_WINDOW_KEYS = frozenset({"all", "30d", "90d", "365d"})
+
+
+def normalize_history_window_key(raw: str | None) -> str:
+    """Return all | 30d | 90d | 365d."""
+    if not raw or not isinstance(raw, str):
+        return "all"
+    k = raw.strip().lower()
+    return k if k in _HISTORY_WINDOW_KEYS else "all"
+
+
+def history_window_delta(key: str) -> timedelta | None:
+    return {
+        "all": None,
+        "30d": timedelta(days=30),
+        "90d": timedelta(days=90),
+        "365d": timedelta(days=365),
+    }.get(key, None)
+
+
+def history_window_label(key: str) -> str:
+    return {
+        "all": "All available",
+        "30d": "Past 30 days",
+        "90d": "Past 90 days",
+        "365d": "Past year",
+    }.get(key, "All available")
+
+
+def _effective_since_bound(
+    *,
+    release_floor: datetime,
+    history_window_key: str,
+    now: datetime,
+) -> datetime:
+    delta = history_window_delta(history_window_key)
+    if delta is None:
+        return release_floor
+    return max(release_floor, now - delta)
+
+
+def _chart_insights(
+    chart: PriceHistoryChart,
+) -> tuple[datetime | None, datetime | None, list[PriceHistoryInsightRow]]:
+    all_pts: list[PriceHistoryPoint] = []
+    for ds in chart.datasets:
+        all_pts.extend(ds.points)
+    if not all_pts:
+        return None, None, []
+
+    span_start = min(p.at for p in all_pts)
+    span_end = max(p.at for p in all_pts)
+    atl = min(all_pts, key=lambda p: p.price)
+    latest = max(all_pts, key=lambda p: p.at)
+
+    if chart.source == "cheapshark":
+        rows = [
+            PriceHistoryInsightRow(
+                label="Recorded low (API)",
+                value=f"${atl.price:.2f}",
+                hint=atl.at.strftime("%Y-%m-%d %H:%M UTC"),
+            ),
+            PriceHistoryInsightRow(
+                label="Latest snapshot",
+                value=f"${latest.price:.2f}",
+                hint=latest.at.strftime("%Y-%m-%d %H:%M UTC"),
+            ),
+            PriceHistoryInsightRow(
+                label="Span",
+                value=f"{span_start.strftime('%Y-%m-%d')} → {span_end.strftime('%Y-%m-%d')}",
+                hint="CheapShark exposes sparse milestones, not a full curve.",
+            ),
+        ]
+    else:
+        rows = [
+            PriceHistoryInsightRow(
+                label="Low in view (USD)",
+                value=f"${atl.price:.2f}",
+                hint=(atl.caption or "").strip() or atl.at.strftime("%Y-%m-%d %H:%M UTC"),
+            ),
+            PriceHistoryInsightRow(
+                label="Latest observation",
+                value=f"${latest.price:.2f}",
+                hint=latest.at.strftime("%Y-%m-%d %H:%M UTC"),
+            ),
+            PriceHistoryInsightRow(
+                label="Storefront series",
+                value=str(len(chart.datasets)),
+                hint="Shops with the most logged price changes (capped).",
+            ),
+            PriceHistoryInsightRow(
+                label="Data points",
+                value=str(len(all_pts)),
+                hint="After server-side sampling for chart size.",
+            ),
+            PriceHistoryInsightRow(
+                label="Span (UTC)",
+                value=f"{span_start.strftime('%Y-%m-%d')} → {span_end.strftime('%Y-%m-%d')}",
+                hint="IsThereAnyDeal storefront log",
+            ),
+        ]
+    return span_start, span_end, rows
+
+
+def _finalize_chart_window_meta(
+    chart: PriceHistoryChart,
+    *,
+    history_window_key: str,
+    history_window_adjustable: bool,
+) -> PriceHistoryChart:
+    eff_lo, eff_hi, rows = _chart_insights(chart)
+    return chart.model_copy(
+        update={
+            "history_window_key": history_window_key,
+            "history_window_label": history_window_label(history_window_key),
+            "history_window_adjustable": history_window_adjustable,
+            "effective_since": eff_lo,
+            "effective_until": eff_hi,
+            "insight_rows": rows,
+        }
+    )
 
 
 def _utc_label(dt: datetime) -> str:
@@ -257,8 +380,11 @@ async def build_price_history_chart(
     *,
     prefetch: CheapSharkPrefetch | None = None,
     steam_lookup: SteamLookupResult | None = None,
+    history_window_raw: str | None = None,
 ) -> PriceHistoryChart | None:
     """Prefer ITAD when configured + Steam id; otherwise CheapShark milestone chart."""
+    win_key = normalize_history_window_key(history_window_raw)
+
     if prefetch is not None:
         deals, _picked, bundle = prefetch
     else:
@@ -277,18 +403,35 @@ async def build_price_history_chart(
             gid = None
         if gid:
             since_year = game.release_year or _HISTORY_SINCE_YEAR_FALLBACK
-            since = datetime(since_year, 1, 1, tzinfo=UTC)
+            release_floor = datetime(since_year, 1, 1, tzinfo=UTC)
+            now = utcnow()
+            since_eff = _effective_since_bound(
+                release_floor=release_floor,
+                history_window_key=win_key,
+                now=now,
+            )
             try:
                 raw = await itad.fetch_price_history_log(
                     game_uuid=gid,
                     api_key=api_key,
                     country=country,
-                    since=since,
+                    since=since_eff,
                 )
             except Exception:  # noqa: BLE001
                 raw = []
             chart = _itad_history_chart(game_title=game.title, raw_rows=raw, country=country)
             if chart is not None:
-                return chart
+                return _finalize_chart_window_meta(
+                    chart,
+                    history_window_key=win_key,
+                    history_window_adjustable=True,
+                )
 
-    return _cheapshark_milestone_chart(game_title=game.title, bundle=bundle, deals=deals)
+    cs_chart = _cheapshark_milestone_chart(game_title=game.title, bundle=bundle, deals=deals)
+    if cs_chart is None:
+        return None
+    return _finalize_chart_window_meta(
+        cs_chart,
+        history_window_key=win_key,
+        history_window_adjustable=False,
+    )

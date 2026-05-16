@@ -114,7 +114,13 @@ async def augment_fixture_page(page: GamePricingPage, settings: Settings) -> Gam
     )
 
 
-async def _assemble_live_detail(request: Request, game: GameSummary, settings: Settings) -> HTMLResponse:
+async def _assemble_live_detail(
+    request: Request,
+    game: GameSummary,
+    settings: Settings,
+    *,
+    history_window: str | None = None,
+) -> HTMLResponse:
     steam_lookup = await resolve_steam_lookup(game)
     game = apply_steam_cover_fallback(game, steam_lookup)
 
@@ -136,6 +142,7 @@ async def _assemble_live_detail(request: Request, game: GameSummary, settings: S
         settings,
         prefetch=prefetch,
         steam_lookup=steam_lookup,
+        history_window_raw=history_window,
     )
 
     page = assemble_game_page(
@@ -284,6 +291,7 @@ async def search_suggestions_partial(
 async def game_detail_rawg(
     request: Request,
     rawg_id: int,
+    history_window: str | None = Query(None, alias="history_window"),
     settings: Settings = Depends(settings_dep),
 ) -> HTMLResponse:
     if not settings.rawg_api_key:
@@ -296,13 +304,14 @@ async def game_detail_rawg(
     if game is None:
         raise HTTPException(status_code=404, detail="Game not found in RAWG.")
 
-    return await _assemble_live_detail(request, game, settings)
+    return await _assemble_live_detail(request, game, settings, history_window=history_window)
 
 
 @app.get("/games/giantbomb/{guid}", response_class=HTMLResponse)
 async def game_detail_giantbomb(
     request: Request,
     guid: str,
+    history_window: str | None = Query(None, alias="history_window"),
     settings: Settings = Depends(settings_dep),
 ) -> HTMLResponse:
     if not settings.giant_bomb_api_key:
@@ -315,13 +324,14 @@ async def game_detail_giantbomb(
     if game is None:
         raise HTTPException(status_code=404, detail="Game not found via Giant Bomb.")
 
-    return await _assemble_live_detail(request, game, settings)
+    return await _assemble_live_detail(request, game, settings, history_window=history_window)
 
 
 @app.get("/games/{igdb_id}", response_class=HTMLResponse)
 async def game_detail(
     request: Request,
     igdb_id: int,
+    history_window: str | None = Query(None, alias="history_window"),
     settings: Settings = Depends(settings_dep),
 ) -> HTMLResponse:
     fixture_page = fixture_detail(igdb_id)
@@ -347,7 +357,7 @@ async def game_detail(
     if game is None:
         raise HTTPException(status_code=404, detail="Game not found in IGDB.")
 
-    return await _assemble_live_detail(request, game, settings)
+    return await _assemble_live_detail(request, game, settings, history_window=history_window)
 
 
 @app.get("/feedback", response_class=HTMLResponse)

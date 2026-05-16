@@ -94,11 +94,29 @@ class PriceHistoryDataset(BaseModel):
     points: list[PriceHistoryPoint]
 
 
+class PriceHistoryInsightRow(BaseModel):
+    """Short KPI row for SSR (game detail explorer strip)."""
+
+    label: str
+    value: str
+    hint: str = ""
+
+
 class PriceHistoryChart(BaseModel):
     title: str
     footnotes: list[str] = Field(default_factory=list)
     source: PriceHistorySource
     datasets: list[PriceHistoryDataset] = Field(default_factory=list)
+
+    #: UI key: all | 365d | 90d | 30d — used for form default and ITAD fetch.
+    history_window_key: str = "all"
+    history_window_label: str = "All available"
+    #: When False, storefront history cannot be narrowed (CheapShark milestones).
+    history_window_adjustable: bool = True
+
+    effective_since: datetime | None = None
+    effective_until: datetime | None = None
+    insight_rows: list[PriceHistoryInsightRow] = Field(default_factory=list)
 
 
 class GamePricingPage(BaseModel):
