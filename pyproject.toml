@@ -13,3 +13,18 @@ dependencies = [
     "rapidfuzz>=3.14.5",
     "uvicorn[standard]>=0.47.0",
 ]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.5",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[build-system]
+requires = ["hatchling>=1.24.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["game_price_finder"]

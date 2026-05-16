@@ -11,6 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from starlette.templating import Jinja2Templates
 
 from game_price_finder.config import Settings, get_settings
+from game_price_finder.errors import register_exception_handlers
 from game_price_finder.feedback_store import insert_feedback, list_feedback_recent
 from game_price_finder.fixture_catalog import fixture_detail, fixture_search
 from game_price_finder.models import GamePricingPage, GameSummary, SearchSuggestion, SourceOffer
@@ -45,6 +46,7 @@ def _chartjs_json_filter(chart: Any) -> str:
 templates.env.filters["chartjs_json"] = _chartjs_json_filter
 
 app = FastAPI(title="Game Price Finder", version="0.1.0")
+register_exception_handlers(app, templates=templates, get_settings_fn=get_settings)
 app.mount("/static", StaticFiles(directory=str(PACKAGE_DIR / "static")), name="static")
 
 ALLOWED_FEEDBACK_CATEGORIES = frozenset({"price_correction", "wrong_game", "feature", "other"})
@@ -217,21 +219,29 @@ async def search_page(
             warnings.append("No demo titles matched — try clearing the query or search “demo”.")
 
     if settings.rawg_api_key or settings.giant_bomb_api_key:
-        games = await merge_catalog_search(
-            query=q,
-            primary_rows=primary_rows,
-            rawg_api_key=settings.rawg_api_key,
-            giant_bomb_api_key=settings.giant_bomb_api_key,
-            rawg_limit=settings.catalog_rawg_limit,
-            gb_limit=settings.catalog_gb_limit,
-            merge_max=settings.catalog_merge_max_results,
-        )
+        try:
+            games = await merge_catalog_search(
+                query=q,
+                primary_rows=primary_rows,
+                rawg_api_key=settings.rawg_api_key,
+                giant_bomb_api_key=settings.giant_bomb_api_key,
+                rawg_limit=settings.catalog_rawg_limit,
+                gb_limit=settings.catalog_gb_limit,
+                merge_max=settings.catalog_merge_max_results,
+            )
+        except Exception as exc:  # noqa: BLE001
+            warnings.append(f"Catalog merge failed: {exc}")
+            games = [ensure_catalog_nav_urls(g) for g in primary_rows][: settings.catalog_merge_max_results]
     else:
         games = [ensure_catalog_nav_urls(g) for g in primary_rows][: settings.catalog_merge_max_results]
 
     if games:
         price_hints = await batch_price_hints_for_games(games)
-    suggestions = await maybe_fuzzy_suggestions(query=q, igdb_hit_count=igdb_hit_count_for_fuzzy)
+    try:
+        suggestions = await maybe_fuzzy_suggestions(query=q, igdb_hit_count=igdb_hit_count_for_fuzzy)
+    except Exception as exc:  # noqa: BLE001
+        warnings.append(f"Search hints failed: {exc}")
+        suggestions = []
 
     return templates.TemplateResponse(
         request,
@@ -267,15 +277,18 @@ async def search_suggestions_partial(
             primary_rows = []
 
     if settings.rawg_api_key or settings.giant_bomb_api_key:
-        games = await merge_catalog_search(
-            query=q,
-            primary_rows=primary_rows,
-            rawg_api_key=settings.rawg_api_key,
-            giant_bomb_api_key=settings.giant_bomb_api_key,
-            rawg_limit=settings.catalog_suggestions_rawg_limit,
-            gb_limit=settings.catalog_suggestions_gb_limit,
-            merge_max=settings.catalog_suggestions_merge_max,
-        )
+        try:
+            games = await merge_catalog_search(
+                query=q,
+                primary_rows=primary_rows,
+                rawg_api_key=settings.rawg_api_key,
+                giant_bomb_api_key=settings.giant_bomb_api_key,
+                rawg_limit=settings.catalog_suggestions_rawg_limit,
+                gb_limit=settings.catalog_suggestions_gb_limit,
+                merge_max=settings.catalog_suggestions_merge_max,
+            )
+        except Exception:
+            games = [ensure_catalog_nav_urls(g) for g in primary_rows][: settings.catalog_suggestions_merge_max]
     else:
         games = [ensure_catalog_nav_urls(g) for g in primary_rows][: settings.catalog_suggestions_merge_max]
 
@@ -374,11 +387,12 @@ async def feedback_page(
             "settings": settings,
             "pref_title": game_title.strip()[:300],
             "pref_reference": reference_note.strip()[:800],
+            "submit_error": None,
         },
     )
 
 
-@app.post("/feedback")
+@app.post("/feedback", response_model=None)
 async def feedback_submit(
     request: Request,
     category: str = Form(...),
@@ -389,7 +403,7 @@ async def feedback_submit(
     contact_email: str = Form(""),
     website: str = Form(""),
     settings: Settings = Depends(settings_dep),
-) -> RedirectResponse:
+) -> RedirectResponse | HTMLResponse:
     honeypot_filled = bool(website.strip())
     cat = category.strip()
     if cat not in ALLOWED_FEEDBACK_CATEGORIES:
@@ -403,7 +417,10 @@ async def feedback_submit(
         except ValueError:
             price_val = None
 
-    if not honeypot_filled:
+    if honeypot_filled:
+        return RedirectResponse(url=request.url_for("feedback_thanks_page"), status_code=303)
+
+    try:
         insert_feedback(
             db_path=settings.feedback_db_path,
             category=cat,
@@ -413,6 +430,18 @@ async def feedback_submit(
             suggested_price_usd=price_val,
             contact_email=contact_email or None,
             honeypot_filled=False,
+        )
+    except Exception as exc:  # noqa: BLE001 — disk/perms/sqlite failures
+        return templates.TemplateResponse(
+            request,
+            "feedback.html",
+            {
+                "settings": settings,
+                "pref_title": game_title.strip()[:300],
+                "pref_reference": reference_note.strip()[:800],
+                "submit_error": f"Could not save feedback: {exc}",
+            },
+            status_code=500,
         )
 
     return RedirectResponse(url=request.url_for("feedback_thanks_page"), status_code=303)

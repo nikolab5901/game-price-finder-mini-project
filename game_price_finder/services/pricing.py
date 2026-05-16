@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import statistics
 from typing import Any
 from urllib.parse import quote_plus
@@ -8,6 +9,8 @@ from game_price_finder.models import GamePricingPage, GameSummary, PriceEstimate
 from game_price_finder.services.cheapshark import CheapSharkPrefetch, deal_price_usd, fetch_cheapshark_snapshot, store_id_to_name
 from game_price_finder.services.research_links import marketplace_query_for_game, research_listing_offers
 from game_price_finder.services.steam import SteamLookupResult, steam_storefront_url
+
+_log = logging.getLogger(__name__)
 
 
 def _median(vals: list[float]) -> float | None:
@@ -269,7 +272,11 @@ async def cheapshark_market_section(
 
     notes.extend(_cheapshark_buyer_signal_notes(deals))
 
-    stores = await store_id_to_name()
+    try:
+        stores = await store_id_to_name()
+    except Exception as exc:  # noqa: BLE001 — keep deals with Store N fallback labels
+        _log.warning("CheapShark store name map unavailable: %s", exc)
+        stores = {}
     sources: list[SourceOffer] = []
     prices: list[float] = []
 

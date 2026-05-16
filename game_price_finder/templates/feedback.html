@@ -4,6 +4,11 @@
 
 {% block content %}
 <h1 class="page-title">Suggest a correction</h1>
+{% if submit_error %}
+  <div class="banner error-banner" role="alert">
+    <strong>Could not save your message.</strong> {{ submit_error }}
+  </div>
+{% endif %}
 <p class="muted">
   Spot an inaccurate price signal, wrong catalog match, or confusing label? Leave a note for the site operator.
   Nothing here updates listings automatically — this is feedback only.

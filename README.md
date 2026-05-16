@@ -26,11 +26,13 @@ uv sync
 uv run uvicorn game_price_finder.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
+Run **`pytest`** after **`uv sync --extra dev`** (see [USAGE.md — Automated tests](USAGE.md#automated-tests-developers)).
+
 Open http://127.0.0.1:8000 — search for **demo**, browse **`/search`** with an empty query in fixture mode for many bundled titles, or open **`/games/900001`** (demo) / **`/games/910001`** (popular catalog).
 
 ## Project plans
 
-Implementation plan snapshots (numbered evolution): **[plans/README.md](plans/README.md)** — includes [`01-game-price-finder-python-uv.plan.md`](plans/01-game-price-finder-python-uv.plan.md) through [`11-history-explorer-ui-and-catalog-covers.plan.md`](plans/11-history-explorer-ui-and-catalog-covers.plan.md).
+Implementation plan snapshots (numbered evolution): **[plans/README.md](plans/README.md)** — includes [`01-game-price-finder-python-uv.plan.md`](plans/01-game-price-finder-python-uv.plan.md) through [`12-quality-assurance-error-handling.plan.md`](plans/12-quality-assurance-error-handling.plan.md).
 
 ## Live integrations
 

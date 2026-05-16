@@ -36,6 +36,9 @@ class Settings(BaseSettings):
 
     default_currency: str = "USD"
 
+    #: When True, HTML error responses may include exception detail (dev/troubleshooting only).
+    debug: bool = False
+
 
 @lru_cache
 def get_settings() -> Settings:

@@ -17,6 +17,7 @@ This folder holds **snapshots of Cursor-generated implementation plans** for thi
 | 9 | [09-fixture-cover-artwork.plan.md](09-fixture-cover-artwork.plan.md) | Offline Steam/CheapShark/RAWG thumbnail enrichment for fixture JSON; CSV overrides |
 | 10 | [10-price-history-charts.plan.md](10-price-history-charts.plan.md) | Optional ITAD + CheapShark-backed price history chart on game detail (Chart.js) |
 | 11 | [11-history-explorer-ui-and-catalog-covers.plan.md](11-history-explorer-ui-and-catalog-covers.plan.md) | Trends-like history explorer UI + Lutris-assisted full `popular_catalog` covers |
+| 12 | [12-quality-assurance-error-handling.plan.md](12-quality-assurance-error-handling.plan.md) | pytest + CI, upstream hardening (Steam/CheapShark/search/feedback), HTML/JSON error pages |
 
 ## Version history
 

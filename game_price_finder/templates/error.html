@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} · Game Price Finder{% endblock %}
+
+{% block content %}
+<div class="panel error-panel" role="alert">
+  <h1 class="page-title">{{ title }}</h1>
+  <p class="error-message">{{ message }}</p>
+  {% if debug_detail %}
+    <pre class="error-debug muted">{{ debug_detail }}</pre>
+    <p class="muted small">Debug detail is enabled (DEBUG / settings.debug).</p>
+  {% endif %}
+  {% if status_code %}<p class="muted">HTTP {{ status_code }}</p>{% endif %}
+  {% if request_path %}<p class="muted small">Path: <code>{{ request_path }}</code></p>{% endif %}
+</div>
+
+<div class="error-actions wrap">
+  <p>
+    <a class="btn inline" href="{{ url_for('index') }}">Home</a>
+    <a class="btn inline" href="{{ url_for('search_page') }}">Search</a>
+    <a class="btn inline" href="{{ url_for('feedback_page') }}">Feedback</a>
+    <button type="button" class="btn secondary inline" onclick="history.back();">Go back</button>
+  </p>
+</div>
+{% endblock %}

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import re
 from typing import Any, Literal
 
@@ -11,6 +12,8 @@ STEAM_STORE_SEARCH = "https://store.steampowered.com/api/storesearch/"
 STEAM_APP_DETAILS = "https://store.steampowered.com/api/appdetails"
 
 SteamConfidence = Literal["high", "medium", "low"]
+
+_log = logging.getLogger(__name__)
 
 
 class SteamLookupResult:
@@ -117,57 +120,61 @@ def _pick_search_hit(items: list[dict[str, Any]], title: str) -> tuple[dict[str,
 
 async def resolve_steam_lookup(game: GameSummary) -> SteamLookupResult | None:
     """Resolve Steam listing via IGDB-linked app id or Store Search fallback."""
-    header_image: str | None = None
-    price_usd: float | None = None
-    currency = "USD"
-    detail_note: str | None = None
+    try:
+        header_image: str | None = None
+        price_usd: float | None = None
+        currency = "USD"
+        detail_note: str | None = None
 
-    data: dict[str, Any] | None = None
-    resolved_name = game.title
-    confidence: SteamConfidence = "low"
-    app_id: int | None = None
+        data: dict[str, Any] | None = None
+        resolved_name = game.title
+        confidence: SteamConfidence = "low"
+        app_id: int | None = None
 
-    if game.steam_app_id is not None:
-        app_id = int(game.steam_app_id)
-        data = await steam_app_details(app_id=app_id)
-        confidence = "high"
-        if data:
-            resolved_name = str(data.get("name") or game.title)
-            header_image = data.get("header_image") if isinstance(data.get("header_image"), str) else None
-            price_usd, currency = _steam_final_price_usd(data)
-    else:
-        hits = await steam_store_search(term=game.title)
-        picked, hit_conf = _pick_search_hit(hits, game.title)
-        if not picked:
+        if game.steam_app_id is not None:
+            app_id = int(game.steam_app_id)
+            data = await steam_app_details(app_id=app_id)
+            confidence = "high"
+            if data:
+                resolved_name = str(data.get("name") or game.title)
+                header_image = data.get("header_image") if isinstance(data.get("header_image"), str) else None
+                price_usd, currency = _steam_final_price_usd(data)
+        else:
+            hits = await steam_store_search(term=game.title)
+            picked, hit_conf = _pick_search_hit(hits, game.title)
+            if not picked:
+                return None
+            raw_id = picked.get("id") or picked.get("appid")
+            try:
+                app_id = int(raw_id)
+            except (TypeError, ValueError):
+                return None
+            confidence = hit_conf
+            resolved_name = str(picked.get("name") or game.title)
+            data = await steam_app_details(app_id=app_id)
+            if data:
+                resolved_name = str(data.get("name") or resolved_name)
+                header_image = data.get("header_image") if isinstance(data.get("header_image"), str) else None
+                price_usd, currency = _steam_final_price_usd(data)
+
+        if app_id is None:
             return None
-        raw_id = picked.get("id") or picked.get("appid")
-        try:
-            app_id = int(raw_id)
-        except (TypeError, ValueError):
-            return None
-        confidence = hit_conf
-        resolved_name = str(picked.get("name") or game.title)
-        data = await steam_app_details(app_id=app_id)
-        if data:
-            resolved_name = str(data.get("name") or resolved_name)
-            header_image = data.get("header_image") if isinstance(data.get("header_image"), str) else None
-            price_usd, currency = _steam_final_price_usd(data)
 
-    if app_id is None:
+        if confidence == "low":
+            detail_note = "Low-confidence Steam catalog match — verify this is the edition you mean."
+
+        return SteamLookupResult(
+            app_id=app_id,
+            name=resolved_name,
+            header_image=header_image,
+            price_final_usd=price_usd,
+            currency=currency,
+            confidence=confidence,
+            detail_note=detail_note,
+        )
+    except Exception as exc:  # noqa: BLE001 — treat outage like “no Steam match”
+        _log.warning("Steam lookup failed for %r: %s", game.title, exc)
         return None
-
-    if confidence == "low":
-        detail_note = "Low-confidence Steam catalog match — verify this is the edition you mean."
-
-    return SteamLookupResult(
-        app_id=app_id,
-        name=resolved_name,
-        header_image=header_image,
-        price_final_usd=price_usd,
-        currency=currency,
-        confidence=confidence,
-        detail_note=detail_note,
-    )
 
 
 def apply_steam_cover_fallback(game: GameSummary, steam: SteamLookupResult | None) -> GameSummary:

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 import httpx
@@ -13,6 +14,8 @@ CHEAPSHARK_HEADERS = {
     "Accept": "application/json",
 }
 
+_log = logging.getLogger(__name__)
+
 _store_names_cache: dict[int, str] | None = None
 
 
@@ -24,10 +27,14 @@ async def store_id_to_name(*, timeout: float = 20.0) -> dict[int, str]:
     global _store_names_cache
     if _store_names_cache is not None:
         return _store_names_cache
-    async with _cheapshark_client(timeout=timeout) as client:
-        response = await client.get(f"{CHEAPSHARK_BASE}/stores")
-        response.raise_for_status()
-        payload = response.json()
+    try:
+        async with _cheapshark_client(timeout=timeout) as client:
+            response = await client.get(f"{CHEAPSHARK_BASE}/stores")
+            response.raise_for_status()
+            payload = response.json()
+    except Exception as exc:  # noqa: BLE001 - degrade to empty map, retry next call
+        _log.warning("CheapShark stores list failed: %s", exc)
+        return {}
     mapping: dict[int, str] = {}
     if isinstance(payload, list):
         for row in payload:
@@ -136,19 +143,23 @@ CheapSharkPrefetch = tuple[list[dict[str, Any]], dict[str, Any] | None, dict[str
 
 
 async def fetch_cheapshark_snapshot(game: GameSummary) -> CheapSharkPrefetch:
-    rows = await cheapshark_search_games(title=game.title)
-    picked = pick_cheapshark_game_row(rows, game)
-    if not picked:
-        return [], None, None
-    cg_id = picked.get("gameID")
     try:
-        cheapshark_game_id = int(cg_id)
-    except (TypeError, ValueError):
-        return [], picked, None
-    bundle = await cheapshark_fetch_game_bundle(cheapshark_game_id=cheapshark_game_id)
-    embedded = bundle.get("deals") if isinstance(bundle, dict) else None
-    if isinstance(embedded, list) and embedded:
-        deals_list = [d for d in embedded if isinstance(d, dict)]
-    else:
-        deals_list = await cheapshark_deals_for_game(cheapshark_game_id=cheapshark_game_id, page_size=30)
-    return deals_list, picked, bundle if isinstance(bundle, dict) else None
+        rows = await cheapshark_search_games(title=game.title)
+        picked = pick_cheapshark_game_row(rows, game)
+        if not picked:
+            return [], None, None
+        cg_id = picked.get("gameID")
+        try:
+            cheapshark_game_id = int(cg_id)
+        except (TypeError, ValueError):
+            return [], picked, None
+        bundle = await cheapshark_fetch_game_bundle(cheapshark_game_id=cheapshark_game_id)
+        embedded = bundle.get("deals") if isinstance(bundle, dict) else None
+        if isinstance(embedded, list) and embedded:
+            deals_list = [d for d in embedded if isinstance(d, dict)]
+        else:
+            deals_list = await cheapshark_deals_for_game(cheapshark_game_id=cheapshark_game_id, page_size=30)
+        return deals_list, picked, bundle if isinstance(bundle, dict) else None
+    except Exception as exc:  # noqa: BLE001 - live pages must not 500 on upstream/markup issues
+        _log.warning("CheapShark snapshot failed for %r: %s", game.title, exc)
+        return [], None, None

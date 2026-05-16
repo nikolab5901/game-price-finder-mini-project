@@ -54,6 +54,18 @@ Open **http://127.0.0.1:8000** in your browser.
 
 To confirm the server is up without the UI: **GET** http://127.0.0.1:8000/healthz
 
+## Automated tests (developers)
+
+Install dev dependencies (`pytest` ships in the **`dev`** optional extra) and run the suite:
+
+```powershell
+uv sync --extra dev
+uv run pytest -q
+```
+
+Tests assume **`USE_FIXTURES=true`**-style defaults through the app's dependency override; they hit **fixture** catalog routes and mocked upstream failures rather than hitting real Steam/CheapShark quotas in CI.
+
+
 ## How to use the UI
 
 - **Home (`/`)** — Enter a title and submit to run a full search, or use **Search** in the header for the results page directly.
