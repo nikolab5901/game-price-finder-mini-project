@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Search{% if query %} — {{ query }}{% endif %} · Game Price Finder{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Results</h1>
+
+<form class="search-bar slim" action="{{ url_for('search_page') }}" method="get" role="search">
+  <label class="sr-only" for="q2">Game title</label>
+  <div class="search-field-wrap search-field-wide">
+    <input id="q2" name="q" type="search" value="{{ query }}" placeholder="Search IGDB catalog…"
+      {% if twitch_catalog_ready %}
+      hx-get="{{ url_for('search_suggestions_partial') }}"
+      hx-trigger="input changed delay:350ms, search"
+      hx-target="#search-suggestions-results"
+      hx-swap="innerHTML"
+      hx-indicator="#htmx-indicator-results"
+      {% endif %}
+    >
+    {% if twitch_catalog_ready %}
+    <span id="htmx-indicator-results" class="htmx-indicator" aria-hidden="true"></span>
+    <div id="search-suggestions-results" class="search-suggestions-host" role="region" aria-label="Live search suggestions"></div>
+    {% endif %}
+  </div>
+  <button type="submit">Search</button>
+</form>
+
+{% if warnings %}
+<div class="alerts" role="alert">
+  {% for w in warnings %}
+  <p class="alert">{{ w }}</p>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if suggestions %}
+<details class="did-you-mean panel small" open>
+  <summary class="did-you-mean-summary">Did you mean</summary>
+  <p class="muted tiny did-you-mean-lede">Steam storefront spelling hints — conservative matches only.</p>
+  <ul class="did-you-mean-list">
+    {% for s in suggestions %}
+    <li><a href="{{ url_for('search_page') }}?q={{ s.suggested_query | urlquote }}">{{ s.title }}</a></li>
+    {% endfor %}
+  </ul>
+</details>
+{% endif %}
+
+{% if not games %}
+<p class="muted empty-copy">
+  {% if query %}Nothing matched yet — widen your keywords or verify API credentials.
+  {% else %}Enter a title above{% if settings.use_fixtures %} (fixture mode lists every demo title without a query){% endif %}.
+  {% endif %}
+</p>
+{% else %}
+<ul class="result-grid">
+  {% for game in games %}
+  <li class="card">
+    <a class="card-link" href="{{ url_for('game_detail', igdb_id=game.igdb_id) }}">
+      {% if game.cover_image_url %}
+      <img src="{{ game.cover_image_url }}" alt="" class="thumb">
+      {% else %}
+      <div class="thumb thumb-placeholder" aria-hidden="true"></div>
+      {% endif %}
+      <div class="card-body">
+        <h2>{{ game.title }}</h2>
+        <p class="muted">
+          {% if game.platform_summary %}{{ game.platform_summary }}{% else %}Platform unknown{% endif %}
+          {% if game.release_year %} · {{ game.release_year }}{% endif %}
+        </p>
+        {% set hint = price_hints.get(game.igdb_id) %}
+        {% if hint %}
+        <p class="muted tiny price-hint">PC deal floor ≈ ${{ "%.2f"|format(hint) }} (CheapShark)</p>
+        {% endif %}
+      </div>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

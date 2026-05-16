@@ -1,0 +1,12 @@
+{% if games %}
+<ul class="search-suggestions" role="listbox">
+  {% for game in games %}
+  <li role="option">
+    <a href="{{ url_for('search_page') }}?q={{ game.title | urlquote }}">{{ game.title }}</a>
+    {% if game.release_year %}<span class="muted tiny">{{ game.release_year }}</span>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% elif query_stripped %}
+<p class="search-suggestions-empty muted tiny">No catalog matches yet.</p>
+{% endif %}

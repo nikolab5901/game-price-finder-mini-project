@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <h1>Know what games trade for</h1>
+  <p class="lede">
+    Search a title to compare <strong>asking bands</strong> on marketplaces (live mode via eBay Browse API)
+    and keep quick links handy for buying pre-owned inventory or pricing a flip.
+  </p>
+
+  <form class="search-bar" action="{{ url_for('search_page') }}" method="get" role="search">
+    <label class="sr-only" for="q">Game title</label>
+    <div class="search-field-wrap">
+      <input id="q" name="q" type="search" placeholder="Try “Elden Ring”, “demo” (fixtures), or “Zelda” with Twitch keys" autocomplete="off"
+        {% if twitch_catalog_ready is defined and twitch_catalog_ready %}
+        hx-get="{{ url_for('search_suggestions_partial') }}"
+        hx-trigger="input changed delay:350ms, search"
+        hx-target="#search-suggestions-home"
+        hx-swap="innerHTML"
+        hx-indicator="#htmx-indicator-home"
+        {% endif %}
+      >
+      {% if twitch_catalog_ready is defined and twitch_catalog_ready %}
+      <span id="htmx-indicator-home" class="htmx-indicator" aria-hidden="true"></span>
+      <div id="search-suggestions-home" class="search-suggestions-host" role="region" aria-label="Live search suggestions"></div>
+      {% endif %}
+    </div>
+    <button type="submit">Search</button>
+  </form>
+
+  <ul class="tips">
+    <li><strong>Buyers:</strong> scan typical ask bands before hunting locally.</li>
+    <li><strong>Sellers:</strong> compare active listings vs sold-style bands where provided.</li>
+    <li><strong>No Twitch keys yet?</strong> Use <code>USE_FIXTURES=true</code> for demo rows — franchise search needs IGDB.</li>
+  </ul>
+</section>
+{% endblock %}

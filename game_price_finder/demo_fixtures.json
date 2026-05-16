@@ -1,0 +1,178 @@
+{
+  "entries": [
+    {
+      "game": {
+        "igdb_id": 900001,
+        "title": "Demo: Rustwind Odyssey",
+        "platform_summary": "PlayStation 5",
+        "cover_image_url": "https://cdn.akamai.steamstatic.com/steam/apps/2440510/header.jpg",
+        "release_year": 2024
+      },
+      "estimates": [
+        {
+          "channel": "new",
+          "basis": "sold",
+          "currency": "USD",
+          "window_days": 90,
+          "sample_size": 38,
+          "value_usd": 54.5,
+          "low_usd": 49.99,
+          "high_usd": 69.99,
+          "as_of": "2026-05-01T18:00:00Z",
+          "disclaimer": "Demo fixture — illustrative only."
+        },
+        {
+          "channel": "used",
+          "basis": "sold",
+          "currency": "USD",
+          "window_days": 90,
+          "sample_size": 112,
+          "value_usd": 37.25,
+          "low_usd": 29.99,
+          "high_usd": 44.0,
+          "as_of": "2026-05-01T18:00:00Z",
+          "disclaimer": "Demo fixture — illustrative only."
+        }
+      ],
+      "sources": [
+        {
+          "source": "eBay",
+          "label": "Fixture: median sold comps (demo)",
+          "url": "https://www.ebay.com/sch/i.html?_nkw=Rustwind+Odyssey+PS5",
+          "price_usd": 37.25,
+          "condition": "Used",
+          "fetched_at": "2026-05-01T18:00:00Z"
+        },
+        {
+          "source": "GameStop",
+          "label": "Search pre-owned inventory (manual link)",
+          "url": "https://www.gamestop.com/search?q=Rustwind%20Odyssey",
+          "fetched_at": "2026-05-01T18:00:00Z"
+        },
+        {
+          "source": "PriceCharting",
+          "label": "Historical comps (external)",
+          "url": "https://www.pricecharting.com/search-products?q=Rustwind+Odyssey",
+          "fetched_at": "2026-05-01T18:00:00Z"
+        }
+      ],
+      "sold_band": {
+        "currency": "USD",
+        "window_days": 90,
+        "sample_size": 112,
+        "p25_usd": 32.0,
+        "median_usd": 37.25,
+        "p75_usd": 42.5,
+        "basis": "sold",
+        "note": "Demo fixture representing marketplace sold comps."
+      },
+      "methodology_notes": [
+        "This page uses bundled demo numbers so you can explore the UI without API keys.",
+        "Turn off USE_FIXTURES and add Twitch + eBay credentials to pull live marketplace data."
+      ]
+    },
+    {
+      "game": {
+        "igdb_id": 900002,
+        "title": "Demo: Lunar Kart Turbo",
+        "platform_summary": "Nintendo Switch",
+        "cover_image_url": null,
+        "release_year": 2023
+      },
+      "estimates": [
+        {
+          "channel": "new",
+          "basis": "ask",
+          "currency": "USD",
+          "window_days": 30,
+          "sample_size": 22,
+          "value_usd": 42.0,
+          "low_usd": 39.99,
+          "high_usd": 49.99,
+          "as_of": "2026-05-01T18:00:00Z"
+        },
+        {
+          "channel": "used",
+          "basis": "sold",
+          "currency": "USD",
+          "window_days": 60,
+          "sample_size": 64,
+          "value_usd": 31.5,
+          "low_usd": 26.0,
+          "high_usd": 36.0,
+          "as_of": "2026-05-01T18:00:00Z"
+        }
+      ],
+      "sources": [
+        {
+          "source": "Amazon",
+          "label": "Third-party sellers (manual search)",
+          "url": "https://www.amazon.com/s?k=Lunar+Kart+Turbo+Nintendo+Switch",
+          "fetched_at": "2026-05-01T18:00:00Z"
+        },
+        {
+          "source": "eBay",
+          "label": "Fixture link — sold listings hub",
+          "url": "https://www.ebay.com/sch/i.html?_nkw=Lunar+Kart+Turbo+Switch",
+          "fetched_at": "2026-05-01T18:00:00Z"
+        }
+      ],
+      "sold_band": {
+        "currency": "USD",
+        "window_days": 60,
+        "sample_size": 64,
+        "p25_usd": 28.5,
+        "median_usd": 31.5,
+        "p75_usd": 34.75,
+        "basis": "sold",
+        "note": "Demo fixture with mixed ask/sold labeling for realism."
+      },
+      "methodology_notes": [
+        "Average rows distinguish asking vs sold basis where labels show it.",
+        "Fixture mode helps sellers sanity-check layout before wiring APIs."
+      ]
+    },
+    {
+      "game": {
+        "igdb_id": 900003,
+        "title": "Demo: Vault Survivors Chronicles",
+        "platform_summary": "PC (Steam)",
+        "cover_image_url": null,
+        "release_year": 2025
+      },
+      "estimates": [
+        {
+          "channel": "unknown",
+          "basis": "ask",
+          "currency": "USD",
+          "window_days": 14,
+          "sample_size": 17,
+          "value_usd": 24.99,
+          "low_usd": 19.99,
+          "high_usd": 29.99,
+          "as_of": "2026-05-01T18:00:00Z",
+          "disclaimer": "Steam-style keys vary widely — demo midpoint."
+        }
+      ],
+      "sources": [
+        {
+          "source": "Steam",
+          "label": "Wishlist / store search (manual)",
+          "url": "https://store.steampowered.com/search/?term=Vault%20Survivors",
+          "fetched_at": "2026-05-01T18:00:00Z"
+        },
+        {
+          "source": "eBay",
+          "label": "Key reseller listings (manual)",
+          "url": "https://www.ebay.com/sch/i.html?_nkw=Vault+Survivors+Steam+Key",
+          "fetched_at": "2026-05-01T18:00:00Z"
+        }
+      ],
+      "sold_band": null,
+      "methodology_notes": [
+        "Digital SKUs often lack consistent sold comps — placeholder omits sold band intentionally.",
+        "Live mode would still attempt eBay Browse aggregation when credentials exist."
+      ]
+    }
+  ]
+}

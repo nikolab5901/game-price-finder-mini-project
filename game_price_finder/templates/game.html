@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.game.title }} · Game Price Finder{% endblock %}
+
+{% macro money(v) -%}
+  {%- if v is none -%}—{%- else -%}${{ '%.2f' % v }}{%- endif -%}
+{%- endmacro %}
+
+{% block content %}
+<article class="detail">
+  <header class="detail-head">
+    {% if page.game.cover_image_url %}
+    <div class="cover-wrap">
+      <img class="cover" src="{{ page.game.cover_image_url }}" alt="">
+      {% if page.game.cover_sources %}
+      <p class="cover-meta muted tiny">Artwork · {{ page.game.cover_sources | join(' · ') }}</p>
+      {% endif %}
+    </div>
+    {% else %}
+    <div class="cover cover-placeholder" aria-hidden="true"></div>
+    {% endif %}
+    <div>
+      <p class="eyebrow">Game detail</p>
+      <h1 class="page-title tight">{{ page.game.title }}</h1>
+      <p class="muted">
+        {% if page.game.platform_summary %}{{ page.game.platform_summary }}{% else %}Platform unknown{% endif %}
+        {% if page.game.release_year %} · {{ page.game.release_year }}{% endif %}
+      </p>
+    </div>
+  </header>
+
+  <section class="panel panel-intro">
+    <h2 class="panel-title">Average estimates</h2>
+    <p class="muted small panel-lede">
+      Cards summarize automated pulls — each tag shows condition plus whether the figure reflects asks versus illustrative demos.
+    </p>
+    {% if page.estimates %}
+    <div class="stat-grid">
+      {% for e in page.estimates %}
+      <div class="stat-card">
+        <p class="stat-label">{{ e.channel | capitalize }} · {{ e.basis | capitalize }}</p>
+        <p class="stat-value">{{ money(e.value_usd) }}</p>
+        <p class="muted small">
+          {% if e.low_usd is not none and e.high_usd is not none %}
+          Range {{ money(e.low_usd) }} – {{ money(e.high_usd) }}
+          {% endif %}
+          {% if e.sample_size %} · n={{ e.sample_size }}{% endif %}
+          {% if e.window_days %} · {{ e.window_days }}d window{% endif %}
+        </p>
+        {% if e.as_of %}
+        <p class="muted tiny">Updated {{ e.as_of.strftime('%Y-%m-%d %H:%M UTC') }}</p>
+        {% endif %}
+        {% if e.disclaimer %}
+        <p class="tiny disclaimer">{{ e.disclaimer }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="muted">No automated averages yet — configure APIs or widen marketplace coverage.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Recent sale-style band</h2>
+    {% if page.sold_band %}
+    <div class="sold-band">
+      <div>
+        <p class="sold-big">{{ money(page.sold_band.median_usd) }}</p>
+        <p class="muted small">Median · {{ page.sold_band.basis | capitalize }} basis · n={{ page.sold_band.sample_size }}</p>
+      </div>
+      <div class="sold-range muted small">
+        <span>p25 {{ money(page.sold_band.p25_usd) }}</span>
+        <span>p75 {{ money(page.sold_band.p75_usd) }}</span>
+        <span>{{ page.sold_band.window_days }}d window</span>
+      </div>
+    </div>
+    {% if page.sold_band.note %}
+    <p class="muted small">{{ page.sold_band.note }}</p>
+    {% endif %}
+    {% else %}
+    <p class="muted">No sold/comp band yet — fixture omitted or marketplace coverage insufficient.</p>
+    {% endif %}
+  </section>
+
+  <section class="panel">
+    <h2>Other sources</h2>
+    <div class="table-scroll">
+      <table class="sources">
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Notes</th>
+            <th>Price</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in page.sources %}
+          <tr>
+            <td><strong>{{ row.source }}</strong></td>
+            <td class="muted">{{ row.label }}{% if row.condition %} · {{ row.condition }}{% endif %}</td>
+            <td>
+              {% if row.price_usd is not none %}
+              {{ money(row.price_usd) }}
+              {% elif row.price_low_usd is not none %}
+              {{ money(row.price_low_usd) }} – {{ money(row.price_high_usd) }}
+              {% else %}—{% endif %}
+            </td>
+            <td class="right">
+              {% if row.url %}
+              <a href="{{ row.url }}" rel="noopener noreferrer" target="_blank">Open</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {% if page.methodology_notes %}
+  <section class="panel prose-block">
+    <h3 class="prose-heading">How to read this page</h3>
+    <ul class="prose-list">
+      {% for note in page.methodology_notes %}
+      <li>{{ note }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</article>
+{% endblock %}

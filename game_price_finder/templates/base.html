@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Game Price Finder{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@1.9.12/dist/htmx.min.js" defer crossorigin="anonymous"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="{{ url_for('index') }}">Game Price Finder</a>
+      <nav class="nav">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('search_page') }}">Search</a>
+      </nav>
+    </div>
+  </header>
+
+  {% if settings is defined and settings.use_fixtures %}
+  <div class="banner wrap" role="status">
+    <strong>Demo fixture catalog.</strong>
+    <code>USE_FIXTURES=true</code> keeps authored demo rows available for layouts.
+    Catalog search uses IGDB whenever Twitch credentials are set (fixtures no longer gate breadth).
+    Without Twitch keys you stay on fixtures only — franchise queries like Zelda need IGDB access.
+  </div>
+  {% endif %}
+
+  <main class="wrap main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer wrap">
+    <p class="muted">
+      Estimates depend on marketplace coverage and listing mix. Ask prices differ from realized sale prices — treat outputs as orientation, not appraisals.
+    </p>
+  </footer>
+</body>
+</html>
